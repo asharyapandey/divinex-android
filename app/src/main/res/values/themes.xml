@@ -1,6 +1,6 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
-    <style name="Theme.DivineX" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
+    <style name="Theme.DivineX" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <!-- Primary brand color. -->
         <item name="colorPrimary">@color/purple_500</item>
         <item name="colorPrimaryVariant">@color/purple_700</item>
@@ -15,10 +15,16 @@
     </style>
 
     <style name="curvedEditText">
-        <item name="android:textColorHint">@color/white</item>
+        <item name="android:textColorHint">@color/black</item>
         <item name="android:padding">16dp</item>
         <item name="android:background">@drawable/curved_edit_text</item>
-
+        <item name="android:fontFamily">@font/montserrat</item>
     </style>
 
+    <style name="curvedButtons">
+        <item name="android:textColor">#000</item>
+        <item name="android:background">@drawable/curved_button</item>
+        <item name="android:fontFamily">@font/montserrat</item>
+        <item name="android:backgroundTint">#fff</item>
+    </style>
 </resources>
