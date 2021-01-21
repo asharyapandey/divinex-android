@@ -7,6 +7,7 @@ import android.text.TextUtils
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
+import android.widget.Toast
 
 class LoginActivity : AppCompatActivity() {
     private lateinit var tvRegister : TextView
@@ -23,8 +24,16 @@ class LoginActivity : AppCompatActivity() {
         tvRegister = findViewById(R.id.tvRegister)
 
         btnLogin.setOnClickListener {
-            val username = etUsername.text.toString().trim()
-            val password = etPassword.text.toString().trim()
+            if (validate()) {
+                val username = etUsername.text.toString().trim()
+                val password = etPassword.text.toString().trim()
+                
+                if (username == "admin" && password == "admin") {
+                    startActivity(Intent(this, DashboardActivity::class.java))
+                } else {
+                    Toast.makeText(this, "Either Username or Password is Incorrect", Toast.LENGTH_SHORT).show()
+                }
+            }
         }
 
         tvRegister.setOnClickListener {
@@ -44,7 +53,7 @@ class LoginActivity : AppCompatActivity() {
                 etPassword.requestFocus()
                 return false
             }
-            return true
         }
+        return true
     }
 }
