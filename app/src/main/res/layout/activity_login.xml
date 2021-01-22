@@ -13,7 +13,7 @@
         android:layout_height="wrap_content"
         android:fontFamily="@font/redressed"
         android:text="@string/app_name"
-        android:textColor="@color/black"
+        android:textColor="@color/purple"
         android:textSize="70sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
@@ -49,6 +49,7 @@
     <Button
         android:id="@+id/btnLogin"
         style="@style/curvedButtons"
+        android:backgroundTint="@color/black"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
