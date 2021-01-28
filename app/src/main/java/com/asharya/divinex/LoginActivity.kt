@@ -8,12 +8,18 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
+import com.asharya.divinex.db.DivinexDB
+import com.asharya.divinex.model.User
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class LoginActivity : AppCompatActivity() {
-    private lateinit var tvRegister : TextView
-    private lateinit var etUsername : EditText
-    private lateinit var etPassword : EditText
-    private lateinit var btnLogin : Button
+    private lateinit var tvRegister: TextView
+    private lateinit var etUsername: EditText
+    private lateinit var etPassword: EditText
+    private lateinit var btnLogin: Button
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
@@ -27,12 +33,7 @@ class LoginActivity : AppCompatActivity() {
             if (validate()) {
                 val username = etUsername.text.toString().trim()
                 val password = etPassword.text.toString().trim()
-                
-                if (username == "admin" && password == "admin") {
-                    startActivity(Intent(this, DashboardActivity::class.java))
-                } else {
-                    Toast.makeText(this, "Either Username or Password is Incorrect", Toast.LENGTH_SHORT).show()
-                }
+                login(username, password)
             }
         }
 
@@ -41,7 +42,29 @@ class LoginActivity : AppCompatActivity() {
         }
     }
 
-    private fun validate() : Boolean {
+    private fun login(username: String, password: String) {
+        CoroutineScope(Dispatchers.IO).launch {
+            var user: User? = null
+            user = DivinexDB.getInstance(this@LoginActivity).getUserDAO()
+                .retrieveUser(username, password)
+
+            if (user != null) {
+                startActivity(Intent(this@LoginActivity, DashboardActivity::class.java))
+                finish()
+            } else {
+                withContext(Dispatchers.Main) {
+                    Toast.makeText(
+                        this@LoginActivity,
+                        "Either Username or Password is Incorrect",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            }
+
+        }
+    }
+
+    private fun validate(): Boolean {
         when {
             TextUtils.isEmpty(etUsername.text) -> {
                 etUsername.error = "Please Enter Your Username"

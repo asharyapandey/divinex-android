@@ -76,7 +76,6 @@ class RegisterActivity : AppCompatActivity() {
                 Toast.makeText(this@RegisterActivity, "User Registered", Toast.LENGTH_SHORT).show()
             }
         }
-
     }
 
     private fun validate() : Boolean {
