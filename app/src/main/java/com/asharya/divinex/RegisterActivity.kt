@@ -1,10 +1,18 @@
 package com.asharya.divinex
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.TextUtils
 import android.util.Log
 import android.widget.*
+import com.asharya.divinex.db.DivinexDB
+import com.asharya.divinex.model.User
+import com.google.android.material.snackbar.Snackbar
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class RegisterActivity : AppCompatActivity() {
     private lateinit var etUsername: EditText
@@ -14,6 +22,7 @@ class RegisterActivity : AppCompatActivity() {
     private lateinit var btnRegister: Button
     private lateinit var rgGender : RadioGroup
     private lateinit var rdoOthers : RadioButton
+    private lateinit var tvLogin : TextView
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_register)
@@ -25,6 +34,7 @@ class RegisterActivity : AppCompatActivity() {
         btnRegister = findViewById(R.id.btnRegister)
         rgGender = findViewById(R.id.rgGender)
         rdoOthers = findViewById(R.id.rdoOthers)
+        tvLogin = findViewById(R.id.tvLogin)
 
         btnRegister.setOnClickListener {
             if (validate()) {
@@ -32,8 +42,38 @@ class RegisterActivity : AppCompatActivity() {
                 val password = etPassword.text.toString()
                 val confirmPassword = etConfirmPassword.text.toString()
                 val email =  etEmail.text.toString()
-                val r = rgGender.checkedRadioButtonId
-                Toast.makeText(this, "$r", Toast.LENGTH_SHORT).show()
+                val rdoID = rgGender.checkedRadioButtonId
+                val checkedRadioButton : RadioButton = findViewById(rdoID)
+                val gender = checkedRadioButton.text.toString()
+
+                if (password == confirmPassword) {
+                    val user = User(username, email, gender, password)
+                    addToDatabase(user)
+                    toLogin()
+                } else {
+                    etConfirmPassword.error = "Passwords do not match"
+                    etConfirmPassword.requestFocus()
+                }
+
+
+            }
+        }
+
+        tvLogin.setOnClickListener {
+            toLogin()
+        }
+    }
+
+    private fun toLogin() {
+       startActivity(Intent(this, LoginActivity::class.java))
+    }
+
+    private fun addToDatabase(user: User) {
+        CoroutineScope(Dispatchers.IO).launch {
+            DivinexDB.getInstance(this@RegisterActivity).getUserDAO().insertUser(user)
+
+            withContext(Dispatchers.Main) {
+                Toast.makeText(this@RegisterActivity, "User Registered", Toast.LENGTH_SHORT).show()
             }
         }
 
