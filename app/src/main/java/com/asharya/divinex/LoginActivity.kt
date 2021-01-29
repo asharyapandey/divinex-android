@@ -49,7 +49,9 @@ class LoginActivity : AppCompatActivity() {
                 .retrieveUser(username, password)
 
             if (user != null) {
-                saveSharedPref(username, password)
+                withContext(Dispatchers.Main) {
+                    saveSharedPref(username, password)
+                }
                 startActivity(Intent(this@LoginActivity, DashboardActivity::class.java))
                 finish()
             } else {
