@@ -49,6 +49,7 @@ class LoginActivity : AppCompatActivity() {
                 .retrieveUser(username, password)
 
             if (user != null) {
+                saveSharedPref(username, password)
                 startActivity(Intent(this@LoginActivity, DashboardActivity::class.java))
                 finish()
             } else {
@@ -78,5 +79,17 @@ class LoginActivity : AppCompatActivity() {
             }
         }
         return true
+    }
+    private fun saveSharedPref(username: String, password: String) {
+        val sharedPref = getSharedPreferences("MyPref", MODE_PRIVATE)
+        val editor = sharedPref.edit()
+        editor.putString("username", username)
+        editor.putString("password", password)
+        editor.apply()
+        Toast.makeText(
+            this@LoginActivity,
+            "Username and password saved",
+            Toast.LENGTH_SHORT
+        ).show()
     }
 }
