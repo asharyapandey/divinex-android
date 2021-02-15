@@ -17,4 +17,10 @@ class UserRepository: ApiRequest() {
         }
     }
 
+    suspend fun loginUser(username: String, password: String) : LoginResponse {
+        return apiRequest {
+            userApi.loginUser(username, password)
+        }
+    }
+
 }
