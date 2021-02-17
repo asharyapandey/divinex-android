@@ -8,11 +8,13 @@ import android.util.Log
 import android.widget.*
 import com.asharya.divinex.db.DivinexDB
 import com.asharya.divinex.model.User
+import com.asharya.divinex.repository.UserRepository
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.lang.Exception
 
 class RegisterActivity : AppCompatActivity() {
     private lateinit var etUsername: EditText
@@ -20,17 +22,17 @@ class RegisterActivity : AppCompatActivity() {
     private lateinit var etPassword: EditText
     private lateinit var etConfirmPassword: EditText
     private lateinit var btnRegister: Button
-    private lateinit var rgGender : RadioGroup
-    private lateinit var rdoOthers : RadioButton
-    private lateinit var tvLogin : TextView
+    private lateinit var rgGender: RadioGroup
+    private lateinit var rdoOthers: RadioButton
+    private lateinit var tvLogin: TextView
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_register)
 
         etUsername = findViewById(R.id.etUsername)
-        etPassword= findViewById(R.id.etPassword)
-        etConfirmPassword= findViewById(R.id.etConfirmPassword)
-        etEmail= findViewById(R.id.etEmail)
+        etPassword = findViewById(R.id.etPassword)
+        etConfirmPassword = findViewById(R.id.etConfirmPassword)
+        etEmail = findViewById(R.id.etEmail)
         btnRegister = findViewById(R.id.btnRegister)
         rgGender = findViewById(R.id.rgGender)
         rdoOthers = findViewById(R.id.rdoOthers)
@@ -41,14 +43,15 @@ class RegisterActivity : AppCompatActivity() {
                 val username = etUsername.text.toString()
                 val password = etPassword.text.toString()
                 val confirmPassword = etConfirmPassword.text.toString()
-                val email =  etEmail.text.toString()
+                val email = etEmail.text.toString()
                 val rdoID = rgGender.checkedRadioButtonId
-                val checkedRadioButton : RadioButton = findViewById(rdoID)
+                val checkedRadioButton: RadioButton = findViewById(rdoID)
                 val gender = checkedRadioButton.text.toString()
 
                 if (password == confirmPassword) {
                     val user = User(username, email, gender, password)
-                    addToDatabase(user)
+//                    addToDatabase(user)
+                    registerUser(user)
                     toLogin()
                 } else {
                     etConfirmPassword.error = "Passwords do not match"
@@ -65,7 +68,7 @@ class RegisterActivity : AppCompatActivity() {
     }
 
     private fun toLogin() {
-       startActivity(Intent(this, LoginActivity::class.java))
+        startActivity(Intent(this, LoginActivity::class.java))
     }
 
     private fun addToDatabase(user: User) {
@@ -78,7 +81,30 @@ class RegisterActivity : AppCompatActivity() {
         }
     }
 
-    private fun validate() : Boolean {
+    private fun registerUser(user: User) {
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                val repository = UserRepository()
+                val response = repository.registerUser(user)
+                if (response.success == true) {
+                    withContext(Dispatchers.Main) {
+                        Toast.makeText(this@RegisterActivity, "User Registered", Toast.LENGTH_SHORT)
+                            .show()
+                    }
+                }
+
+            } catch (ex: Exception) {
+                withContext(Dispatchers.Main) {
+                    Toast.makeText(this@RegisterActivity, ex.toString(), Toast.LENGTH_SHORT).show()
+                }
+
+            }
+
+        }
+
+    }
+
+    private fun validate(): Boolean {
         when {
             TextUtils.isEmpty(etUsername.text) -> {
                 etUsername.error = "Please enter a Username"
