@@ -10,10 +10,7 @@ import com.asharya.divinex.LoginActivity
 import com.asharya.divinex.R
 import com.asharya.divinex.repository.UserRepository
 import com.google.android.material.snackbar.Snackbar
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.*
 import java.lang.Exception
 
 class SplashActivity : AppCompatActivity() {
@@ -21,14 +18,21 @@ class SplashActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_splash)
 
-        loginAPI()
+        CoroutineScope(Dispatchers.IO).launch {
+            loginAPI()
+        }
     }
 
-    private fun loginAPI() {
+    private suspend fun loginAPI() {
         val sharedPref = getSharedPreferences("MyPref", MODE_PRIVATE)
         val username = sharedPref.getString("username", "")
         val password = sharedPref.getString("password", "")
-        CoroutineScope(Dispatchers.IO).launch {
+        if (username == "" || password == "") {
+            delay(500)
+            startActivity(Intent(this@SplashActivity, LoginActivity::class.java))
+            return
+        }
+        withContext(Dispatchers.IO) {
             try {
                 val repository = UserRepository()
                 val response = repository.loginUser(username!!, password!!)
