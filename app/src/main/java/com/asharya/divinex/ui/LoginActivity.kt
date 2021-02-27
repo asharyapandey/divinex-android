@@ -1,6 +1,7 @@
 package com.asharya.divinex.ui
 
 import android.content.Intent
+import android.content.pm.PackageManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.TextUtils
@@ -10,6 +11,7 @@ import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.app.ActivityCompat
 import com.asharya.divinex.R
 import com.asharya.divinex.api.ServiceBuilder
 import com.asharya.divinex.db.DivinexDB

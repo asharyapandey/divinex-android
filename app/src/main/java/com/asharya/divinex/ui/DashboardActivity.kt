@@ -35,8 +35,8 @@ class DashboardActivity : AppCompatActivity() {
         val searchFragment = SearchFragment()
         val profileFragment = ProfileFragment()
 
-        setFragment(homeFragment)
         checkRunTimePermission()
+        setFragment(homeFragment)
         Toast.makeText(this, "${ServiceBuilder.token}", Toast.LENGTH_SHORT).show()
 
         bnvDashboard.setOnNavigationItemSelectedListener {

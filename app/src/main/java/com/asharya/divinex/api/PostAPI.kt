@@ -9,11 +9,11 @@ import retrofit2.http.*
 
 interface PostAPI {
     @Multipart
-    @POST("post/")
+    @POST("post")
     suspend fun addPost(
         @Header("auth-token") token: String,
-        @Body post: Post,
-        @Part("image") image: MultipartBody.Part
+        @Part("caption") caption:String,
+        @Part  image: MultipartBody.Part
     ) : Response<AddPostResponse>
 
     @GET("post/feed")

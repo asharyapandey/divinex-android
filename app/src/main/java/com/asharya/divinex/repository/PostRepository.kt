@@ -12,9 +12,9 @@ class PostRepository : ApiRequest() {
     private val postAPI = ServiceBuilder.buildService(PostAPI::class.java)
 
     // add post
-    suspend fun addPost(post: Post, image: MultipartBody.Part) : AddPostResponse {
+    suspend fun addPost(caption: String, image: MultipartBody.Part) : AddPostResponse {
         return apiRequest {
-            postAPI.addPost(ServiceBuilder.token!!, post, image)
+            postAPI.addPost(ServiceBuilder.token!!, caption, image)
         }
     }
     suspend fun getPostFeed() : PostsResponse {

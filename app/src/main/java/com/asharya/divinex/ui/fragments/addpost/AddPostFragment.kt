@@ -2,20 +2,22 @@ package com.asharya.divinex.ui.fragments.addpost
 
 import android.app.Activity
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.os.Environment
 import android.provider.MediaStore
+import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.EditText
-import android.widget.ImageView
-import android.widget.PopupMenu
+import android.widget.*
+import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import com.asharya.divinex.R
+import com.asharya.divinex.repository.PostRepository
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileOutputStream
@@ -25,7 +27,7 @@ import java.util.*
 class AddPostFragment : Fragment() {
     private lateinit var viewModel: AddPostViewModel
     private lateinit var ivPostImage: ImageView
-    private lateinit var etPostCaption : EditText
+    private lateinit var etPostCaption: EditText
     private lateinit var btnUploadPost: Button
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,25 +41,62 @@ class AddPostFragment : Fragment() {
         val view = inflater.inflate(R.layout.fragment_add_post, container, false)
 
         ivPostImage = view.findViewById(R.id.ivPostImage)
-        etPostCaption= view.findViewById(R.id.etPostCaption)
-        btnUploadPost= view.findViewById(R.id.btnUploadPost)
+        etPostCaption = view.findViewById(R.id.etPostCaption)
+        btnUploadPost = view.findViewById(R.id.btnUploadPost)
+
+        // view model
+        val repository = PostRepository()
+        viewModel = ViewModelProvider(
+            this,
+            AddPostViewModelFactory(repository)
+        ).get(AddPostViewModel::class.java)
+
+
+        //
+        viewModel.postAdded.observe(this, androidx.lifecycle.Observer{ isPostAdded ->
+            if (isPostAdded) {
+                Toast.makeText(context, "Post Added", Toast.LENGTH_SHORT).show()
+            }
+
+        })
 
         ivPostImage.setOnClickListener {
             loadPopUpMenu()
         }
+        btnUploadPost.setOnClickListener {
+            if (validate()) {
+                imageUrl?.let { it1 -> viewModel.addPost(etPostCaption.text.toString(), it1) }
+            }
+        }
         return view
     }
 
+    private fun validate(): Boolean {
+        when {
+            TextUtils.isEmpty(etPostCaption.text) -> {
+                etPostCaption.error = "Please Add a Caption"
+                etPostCaption.requestFocus()
+                return false
+            }
+            imageUrl == null -> {
+                Toast.makeText(context, "Please Select an Image", Toast.LENGTH_SHORT).show()
+                return false
+            }
+        }
+        return true
+    }
+
     private fun loadPopUpMenu() {
-        val popupMenu = PopupMenu(context,ivPostImage)
+        val popupMenu = PopupMenu(context, ivPostImage)
         popupMenu.menuInflater.inflate(R.menu.gallery_camera, popupMenu.menu)
         popupMenu.setOnMenuItemClickListener { item ->
-            when(item.itemId) {
+            when (item.itemId) {
                 R.id.menuCamera -> openCamera()
                 R.id.menuGallery -> openGallery()
             }
             true
         }
+        popupMenu.show()
     }
 
     private var REQUEST_GALLERY_CODE = 0
@@ -68,6 +107,7 @@ class AddPostFragment : Fragment() {
         intent.type = "image/*"
         startActivityForResult(intent, REQUEST_GALLERY_CODE)
     }
+
     private fun openCamera() {
         val cameraIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
         startActivityForResult(cameraIntent, REQUEST_CAMERA_CODE)
@@ -97,6 +137,7 @@ class AddPostFragment : Fragment() {
         }
 
     }
+
     private fun bitmapToFile(
         bitmap: Bitmap,
         fileNameToSave: String
@@ -123,5 +164,4 @@ class AddPostFragment : Fragment() {
             file // it will return null
         }
     }
-
 }
