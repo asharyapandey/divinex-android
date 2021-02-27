@@ -48,9 +48,9 @@ class RegisterActivity : AppCompatActivity() {
                 val gender = checkedRadioButton.text.toString()
 
                 if (password == confirmPassword) {
-                    val user = User(username, email, gender, password)
+                    //val user = User(username, email, gender, password)
 //                    addToDatabase(user)
-                    registerUser(user)
+                    //registerUser(user)
                     toLogin()
                 } else {
                     etConfirmPassword.error = "Passwords do not match"

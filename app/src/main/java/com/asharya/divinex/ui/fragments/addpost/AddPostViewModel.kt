@@ -6,7 +6,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.asharya.divinex.model.Post
 import com.asharya.divinex.repository.PostRepository
 import kotlinx.coroutines.launch
 import okhttp3.MediaType
@@ -26,8 +25,8 @@ class AddPostViewModel(private val repository: PostRepository): ViewModel() {
     fun addPost(caption:String, image:String) {
         viewModelScope.launch {
             val file = File(image)
-            val extention = MimeTypeMap.getFileExtensionFromUrl(image)
-            val mimeType = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extention)
+            val extension = MimeTypeMap.getFileExtensionFromUrl(image)
+            val mimeType = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension)
 
             val reqFile = RequestBody.create(MediaType.parse(mimeType),file)
             val body = MultipartBody.Part.createFormData("image",file.name, reqFile)
