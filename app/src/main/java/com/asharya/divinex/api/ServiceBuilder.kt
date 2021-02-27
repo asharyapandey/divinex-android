@@ -10,7 +10,7 @@ object ServiceBuilder {
 
 
 
-    val token : String? = null
+    var token : String? = null
 
     private val okHttp = OkHttpClient.Builder()
 

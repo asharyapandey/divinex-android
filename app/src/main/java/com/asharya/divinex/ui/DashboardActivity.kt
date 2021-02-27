@@ -2,8 +2,10 @@ package com.asharya.divinex.ui
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.asharya.divinex.R
+import com.asharya.divinex.api.ServiceBuilder
 import com.asharya.divinex.ui.fragments.addphoto.AddPhotoFragment
 import com.asharya.divinex.ui.fragments.home.HomeFragment
 import com.asharya.divinex.ui.fragments.notification.NotificationFragment
@@ -26,6 +28,7 @@ class DashboardActivity : AppCompatActivity() {
         val profileFragment = ProfileFragment()
 
         setFragment(homeFragment)
+        Toast.makeText(this, "${ServiceBuilder.token}", Toast.LENGTH_SHORT).show()
 
         bnvDashboard.setOnNavigationItemSelectedListener {
             when(it.itemId) {

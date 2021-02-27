@@ -11,6 +11,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.asharya.divinex.R
+import com.asharya.divinex.api.ServiceBuilder
 import com.asharya.divinex.db.DivinexDB
 import com.asharya.divinex.model.User
 import com.asharya.divinex.repository.UserRepository
@@ -82,6 +83,7 @@ class LoginActivity : AppCompatActivity() {
                 val response = repository.loginUser(username, password)
                 if (response.success == true) {
                     saveSharedPref(username, password)
+                    ServiceBuilder.token = response.token
                     startActivity(Intent(this@LoginActivity, DashboardActivity::class.java))
                     finish()
                 } else {

@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
 import com.asharya.divinex.R
+import com.asharya.divinex.api.ServiceBuilder
 import com.asharya.divinex.repository.UserRepository
 import kotlinx.coroutines.*
 import java.lang.Exception
@@ -33,6 +34,7 @@ class SplashActivity : AppCompatActivity() {
                 val repository = UserRepository()
                 val response = repository.loginUser(username!!, password!!)
                 if (response.success == true) {
+                    ServiceBuilder.token = response.token
                     startActivity(Intent(this@SplashActivity, DashboardActivity::class.java))
                     finish()
                 } else {
