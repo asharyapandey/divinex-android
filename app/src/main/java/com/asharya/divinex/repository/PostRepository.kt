@@ -6,14 +6,15 @@ import com.asharya.divinex.api.ServiceBuilder
 import com.asharya.divinex.model.Post
 import com.asharya.divinex.response.AddPostResponse
 import com.asharya.divinex.response.PostsResponse
+import okhttp3.MultipartBody
 
 class PostRepository : ApiRequest() {
     private val postAPI = ServiceBuilder.buildService(PostAPI::class.java)
 
     // add post
-    suspend fun addPost(post: Post) : AddPostResponse {
+    suspend fun addPost(post: Post, image: MultipartBody.Part) : AddPostResponse {
         return apiRequest {
-            postAPI.addPost(ServiceBuilder.token!!, post)
+            postAPI.addPost(ServiceBuilder.token!!, post, image)
         }
     }
     suspend fun getPostFeed() : PostsResponse {

@@ -6,7 +6,7 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.asharya.divinex.R
 import com.asharya.divinex.api.ServiceBuilder
-import com.asharya.divinex.ui.fragments.addphoto.AddPhotoFragment
+import com.asharya.divinex.ui.fragments.addpost.AddPostFragment
 import com.asharya.divinex.ui.fragments.home.HomeFragment
 import com.asharya.divinex.ui.fragments.notification.NotificationFragment
 import com.asharya.divinex.ui.fragments.profile.ProfileFragment
@@ -23,7 +23,7 @@ class DashboardActivity : AppCompatActivity() {
 
         val homeFragment = HomeFragment()
         val notificationFragment= NotificationFragment()
-        val addPhotoFragment = AddPhotoFragment()
+        val addPhotoFragment = AddPostFragment()
         val searchFragment = SearchFragment()
         val profileFragment = ProfileFragment()
 
