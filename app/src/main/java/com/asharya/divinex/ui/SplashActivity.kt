@@ -3,13 +3,9 @@ package com.asharya.divinex.ui
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.View
 import android.widget.Toast
-import com.asharya.divinex.DashboardActivity
-import com.asharya.divinex.LoginActivity
 import com.asharya.divinex.R
 import com.asharya.divinex.repository.UserRepository
-import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.*
 import java.lang.Exception
 

@@ -1,9 +1,14 @@
-package com.asharya.divinex
+package com.asharya.divinex.ui
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.fragment.app.Fragment
-import com.asharya.divinex.fragments.*
+import com.asharya.divinex.R
+import com.asharya.divinex.ui.fragments.addphoto.AddPhotoFragment
+import com.asharya.divinex.ui.fragments.home.HomeFragment
+import com.asharya.divinex.ui.fragments.notification.NotificationFragment
+import com.asharya.divinex.ui.fragments.profile.ProfileFragment
+import com.asharya.divinex.ui.fragments.search.SearchFragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class DashboardActivity : AppCompatActivity() {
@@ -26,9 +31,9 @@ class DashboardActivity : AppCompatActivity() {
             when(it.itemId) {
                 R.id.miHome -> setFragment(homeFragment)
                 R.id.miProfile -> setFragment(profileFragment)
-                R.id.miNotifiation-> setFragment(notificationFragment)
+                R.id.miNotifiation -> setFragment(notificationFragment)
                 R.id.miSearch -> setFragment(searchFragment)
-                R.id.miAddPhoto-> setFragment(addPhotoFragment)
+                R.id.miAddPhoto -> setFragment(addPhotoFragment)
             }
             true
         }
