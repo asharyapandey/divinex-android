@@ -1,15 +1,14 @@
-package com.asharya.divinex
+package com.asharya.divinex.ui
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.TextUtils
-import android.util.Log
 import android.widget.*
+import com.asharya.divinex.R
 import com.asharya.divinex.db.DivinexDB
 import com.asharya.divinex.model.User
 import com.asharya.divinex.repository.UserRepository
-import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -49,9 +48,9 @@ class RegisterActivity : AppCompatActivity() {
                 val gender = checkedRadioButton.text.toString()
 
                 if (password == confirmPassword) {
-                    val user = User(username, email, gender, password)
+                    //val user = User(username, email, gender, password)
 //                    addToDatabase(user)
-                    registerUser(user)
+                    //registerUser(user)
                     toLogin()
                 } else {
                     etConfirmPassword.error = "Passwords do not match"

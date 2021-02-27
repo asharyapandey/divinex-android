@@ -10,7 +10,7 @@ object ServiceBuilder {
 
 
 
-    val token : String? = null
+    var token : String? = null
 
     private val okHttp = OkHttpClient.Builder()
 
@@ -25,5 +25,10 @@ object ServiceBuilder {
     // generic function
     fun <T> buildService(serviceType: Class<T>) : T {
         return retrofit.create(serviceType)
+    }
+
+    fun loadImagePath(): String {
+        val arr = BASE_URL.split("/").toTypedArray()
+        return arr[0] + "/" + arr[1] + arr[2] + "/"
     }
 }

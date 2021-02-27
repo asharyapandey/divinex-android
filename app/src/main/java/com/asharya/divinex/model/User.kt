@@ -8,6 +8,7 @@ data class User(
     var username: String,
     var email: String,
     var gender: String,
+    var profilePicture: String,
     var password: String
 ) {
     @PrimaryKey(autoGenerate = true)
