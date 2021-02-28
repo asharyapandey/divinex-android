@@ -27,7 +27,7 @@ class MapsFragment : Fragment() {
          * install it inside the SupportMapFragment. This method will only be triggered once the
          * user has installed Google Play services and returned to the app.
          */
-        val divinex= LatLng(-34.0, 151.0)
+        val divinex= LatLng(27.63223073426789, 85.51490634307042)
         googleMap.addMarker(MarkerOptions().position(divinex).title("DivineX HQ"))
         googleMap.animateCamera(
             CameraUpdateFactory.newLatLngZoom(divinex, 15F),3000,null

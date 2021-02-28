@@ -12,6 +12,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.asharya.divinex.R
 import com.asharya.divinex.api.ServiceBuilder
+import com.asharya.divinex.repository.PostRepository
 import com.asharya.divinex.repository.UserRepository
 import com.bumptech.glide.Glide
 import de.hdodenhof.circleimageview.CircleImageView
@@ -38,7 +39,8 @@ class ProfileFragment : Fragment() {
         btnLoadMaps = view.findViewById(R.id.btnLoadMaps)
 
         val repository = UserRepository()
-        viewModel = ViewModelProvider(this, ProfileViewModelFactory(repository)).get(ProfileViewModel::class.java)
+        val postRepository = PostRepository()
+        viewModel = ViewModelProvider(this, ProfileViewModelFactory(repository, postRepository)).get(ProfileViewModel::class.java)
 
         viewModel.getCurrentUser()
 
