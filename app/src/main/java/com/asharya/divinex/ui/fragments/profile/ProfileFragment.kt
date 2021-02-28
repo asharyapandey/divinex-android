@@ -5,13 +5,16 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.GridLayout
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.asharya.divinex.R
+import com.asharya.divinex.adapters.UserPostsAdapter
 import com.asharya.divinex.api.ServiceBuilder
 import com.asharya.divinex.repository.PostRepository
 import com.asharya.divinex.repository.UserRepository
@@ -39,13 +42,19 @@ class ProfileFragment : Fragment() {
         civProfile = view.findViewById(R.id.civProfile)
         tvUsername = view.findViewById(R.id.tvUsername)
         btnLoadMaps = view.findViewById(R.id.btnLoadMaps)
-        rvUserPosts = view.
+        rvUserPosts = view.findViewById(R.id.rvUserPosts)
+
+        // for RV
+        val adapter = context?.let { UserPostsAdapter(it) }
+        rvUserPosts.adapter = adapter
+        rvUserPosts.layoutManager = GridLayoutManager(context, 3 )
 
         val repository = UserRepository()
         val postRepository = PostRepository()
         viewModel = ViewModelProvider(this, ProfileViewModelFactory(repository, postRepository)).get(ProfileViewModel::class.java)
 
         viewModel.getCurrentUser()
+        viewModel.getCurrentUserPosts()
 
         viewModel.user.observe(viewLifecycleOwner, Observer { user ->
             tvUsername.text = user.username
@@ -54,6 +63,10 @@ class ProfileFragment : Fragment() {
                 profileImagePath = profileImagePath.replace("\\", "/")
                 Glide.with(requireContext()).load(profileImagePath).into(civProfile)
             }
+        })
+
+        viewModel.posts.observe(viewLifecycleOwner, Observer { posts ->
+            adapter?.addPostList(posts)
         })
 
 

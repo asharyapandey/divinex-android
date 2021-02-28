@@ -6,6 +6,7 @@
         android:layout_width="match_parent"
         android:id="@+id/ivProfilePosts"
         android:src="@drawable/noimage"
+        android:scaleType="centerCrop"
         android:layout_height="match_parent"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
