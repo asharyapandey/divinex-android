@@ -9,12 +9,13 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.asharya.divinex.R
 import com.asharya.divinex.api.ServiceBuilder
+import com.asharya.divinex.entity.UserPost
 import com.asharya.divinex.model.Post
 import com.bumptech.glide.Glide
 import de.hdodenhof.circleimageview.CircleImageView
 
 class UserPostsAdapter(val context: Context) : RecyclerView.Adapter<UserPostsAdapter.UserPostViewHolder>() {
-    private var postList = emptyList<Post>()
+    private var postList = emptyList<UserPost>()
 
     inner class UserPostViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val ivProfilePosts: ImageView
@@ -40,7 +41,7 @@ class UserPostsAdapter(val context: Context) : RecyclerView.Adapter<UserPostsAda
 
     override fun getItemCount() = postList.size
 
-    fun addPostList(list: List<Post>) {
+    fun addPostList(list: List<UserPost>) {
         postList = list
         notifyDataSetChanged()
     }

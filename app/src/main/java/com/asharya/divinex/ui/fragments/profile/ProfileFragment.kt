@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.asharya.divinex.R
 import com.asharya.divinex.adapters.UserPostsAdapter
 import com.asharya.divinex.api.ServiceBuilder
+import com.asharya.divinex.db.DivinexDB
 import com.asharya.divinex.repository.PostRepository
 import com.asharya.divinex.repository.UserRepository
 import com.bumptech.glide.Glide
@@ -50,8 +51,9 @@ class ProfileFragment : Fragment() {
         rvUserPosts.layoutManager = GridLayoutManager(context, 3 )
 
         val repository = UserRepository()
-        val postRepository = PostRepository()
-        viewModel = ViewModelProvider(this, ProfileViewModelFactory(repository, postRepository)).get(ProfileViewModel::class.java)
+        val postDao = context?.let { DivinexDB.getInstance(it).getPostDAO() }
+        val postRepository = postDao?.let { PostRepository(it) }
+        viewModel = ViewModelProvider(this, ProfileViewModelFactory(repository, postRepository!!)).get(ProfileViewModel::class.java)
 
         viewModel.getCurrentUser()
         viewModel.getCurrentUserPosts()

@@ -10,12 +10,13 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.asharya.divinex.R
 import com.asharya.divinex.api.ServiceBuilder
+import com.asharya.divinex.entity.FeedPost
 import com.asharya.divinex.model.Post
 import com.bumptech.glide.Glide
 import de.hdodenhof.circleimageview.CircleImageView
 
 class NewsFeedAdapter(val context: Context) : RecyclerView.Adapter<NewsFeedAdapter.NewsFeedViewHolder>() {
-    private var postList = emptyList<Post>()
+    private var postList = emptyList<FeedPost>()
 
     inner class NewsFeedViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val imgCardProfile: CircleImageView
@@ -43,8 +44,8 @@ class NewsFeedAdapter(val context: Context) : RecyclerView.Adapter<NewsFeedAdapt
         val post = postList[position]
 
         holder.tvCaption.text = post.caption
-        holder.tvProfileName.text = post.user?.username ?: ""
-        holder.tvProfileNameCaption.text = post.user?.username ?: ""
+        holder.tvProfileName.text = post.username ?: ""
+        holder.tvProfileNameCaption.text = post.username ?: ""
 
         var postImagePath = ServiceBuilder.loadImagePath() + post.image
         val wat = "http:/10.0.2.2:5000/images/posts/POST-Wed Feb 17 2021-vader.jpg"
@@ -52,8 +53,8 @@ class NewsFeedAdapter(val context: Context) : RecyclerView.Adapter<NewsFeedAdapt
         Glide.with(context).load(postImagePath).into(holder.ivPhoto)
 
         var profileImagePath = ServiceBuilder.loadImagePath()
-        if (post.user?.profilePicture != null) {
-            profileImagePath += post.user?.profilePicture ?: ""
+        if (post.profilePicture != null) {
+            profileImagePath += post.profilePicture ?: ""
             profileImagePath = profileImagePath.replace("\\", "/")
         } else {
             profileImagePath += "images/profile_picture/male_img.png"
@@ -63,7 +64,7 @@ class NewsFeedAdapter(val context: Context) : RecyclerView.Adapter<NewsFeedAdapt
 
     override fun getItemCount() = postList.size
 
-    fun addPostList(list: List<Post>) {
+    fun addPostList(list: List<FeedPost>) {
         postList = list
         notifyDataSetChanged()
     }
