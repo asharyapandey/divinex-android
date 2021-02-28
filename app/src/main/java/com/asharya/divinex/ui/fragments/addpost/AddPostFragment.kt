@@ -17,6 +17,7 @@ import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.asharya.divinex.R
+import com.asharya.divinex.db.DivinexDB
 import com.asharya.divinex.repository.PostRepository
 import java.io.ByteArrayOutputStream
 import java.io.File
@@ -45,15 +46,16 @@ class AddPostFragment : Fragment() {
         btnUploadPost = view.findViewById(R.id.btnUploadPost)
 
         // view model
-        val repository = PostRepository()
+        val postDao = context?.let { DivinexDB.getInstance(it).getPostDAO() }
+        val repository = postDao?.let { PostRepository(it) }
         viewModel = ViewModelProvider(
             this,
-            AddPostViewModelFactory(repository)
+            AddPostViewModelFactory(repository!!)
         ).get(AddPostViewModel::class.java)
 
 
         //
-        viewModel.postAdded.observe(this, androidx.lifecycle.Observer{ isPostAdded ->
+        viewModel.postAdded.observe(viewLifecycleOwner, androidx.lifecycle.Observer{ isPostAdded ->
             if (isPostAdded) {
                 Toast.makeText(context, "Post Added", Toast.LENGTH_SHORT).show()
             }
