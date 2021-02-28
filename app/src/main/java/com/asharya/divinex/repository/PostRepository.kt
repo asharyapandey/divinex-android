@@ -6,6 +6,7 @@ import com.asharya.divinex.api.PostAPI
 import com.asharya.divinex.api.ServiceBuilder
 import com.asharya.divinex.dao.PostDAO
 import com.asharya.divinex.entity.FeedPost
+import com.asharya.divinex.entity.UserPost
 import com.asharya.divinex.model.Post
 import com.asharya.divinex.response.AddPostResponse
 import com.asharya.divinex.response.PostsResponse
@@ -51,9 +52,32 @@ class PostRepository(private val postDAO: PostDAO) : ApiRequest() {
         }
     }
 
-    suspend fun getUserPosts(): PostsResponse {
-        return apiRequest {
-            postAPI.getUsersPost(ServiceBuilder.token!!)
+    suspend fun getUserPosts(): List<UserPost> {
+        refreshUserPosts()
+        return postDAO.getAllUserPosts()
+    }
+
+    private suspend fun refreshUserPosts() {
+        try {
+            val response = apiRequest {
+                postAPI.getUsersPost(ServiceBuilder.token!!)
+            }
+            if (response.success == true) {
+                for (post in response.posts!!)
+                    postDAO.addUserPost(
+                        UserPost(
+                            _id = post._id,
+                            caption = post.caption,
+                            image = post.image,
+                            userID = post.user?._id,
+                            username = post.user?.username,
+                            profilePicture = post.user?.profilePicture
+                        )
+                    )
+            }
+
+        } catch (ex: Exception) {
+            Log.e("PostRepo", ex.toString())
         }
     }
 }

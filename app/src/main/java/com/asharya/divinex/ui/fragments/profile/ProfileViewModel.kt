@@ -5,6 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.asharya.divinex.entity.UserPost
 import com.asharya.divinex.model.Post
 import com.asharya.divinex.model.User
 import com.asharya.divinex.repository.PostRepository
@@ -18,8 +19,8 @@ class ProfileViewModel(private val userRepository: UserRepository, private val p
     val user: LiveData<User>
     get() = _user
 
-    private val _posts= MutableLiveData<List<Post>>()
-    val posts: LiveData<List<Post>>
+    private val _posts= MutableLiveData<List<UserPost>>()
+    val posts: LiveData<List<UserPost>>
         get() = _posts
     init {
     }
@@ -39,9 +40,7 @@ class ProfileViewModel(private val userRepository: UserRepository, private val p
     fun getCurrentUserPosts() {
         viewModelScope.launch {
             try {
-                val response = postRepository.getUserPosts()
-                if (response.success == true)
-                    _posts.value = response.posts!!
+                _posts.value = postRepository.getUserPosts()
             } catch (ex: Exception) {
                 Log.i("AddPostViewModel", ex.toString())
             }
