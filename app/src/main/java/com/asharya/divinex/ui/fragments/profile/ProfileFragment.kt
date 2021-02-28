@@ -10,6 +10,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.RecyclerView
 import com.asharya.divinex.R
 import com.asharya.divinex.api.ServiceBuilder
 import com.asharya.divinex.repository.PostRepository
@@ -22,6 +23,7 @@ class ProfileFragment : Fragment() {
     private lateinit var tvUsername : TextView
     private lateinit var viewModel: ProfileViewModel
     private lateinit var btnLoadMaps: Button
+    private lateinit var rvUserPosts: RecyclerView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,6 +39,7 @@ class ProfileFragment : Fragment() {
         civProfile = view.findViewById(R.id.civProfile)
         tvUsername = view.findViewById(R.id.tvUsername)
         btnLoadMaps = view.findViewById(R.id.btnLoadMaps)
+        rvUserPosts = view.
 
         val repository = UserRepository()
         val postRepository = PostRepository()
