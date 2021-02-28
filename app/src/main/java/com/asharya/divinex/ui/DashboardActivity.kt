@@ -6,6 +6,10 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
+import androidx.navigation.NavController
+import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.fragment.findNavController
+import androidx.navigation.ui.setupWithNavController
 import com.asharya.divinex.R
 import com.asharya.divinex.api.ServiceBuilder
 import com.asharya.divinex.ui.fragments.addpost.AddPostFragment
@@ -17,6 +21,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class DashboardActivity : AppCompatActivity() {
     private lateinit var bnvDashboard: BottomNavigationView
+    private lateinit var navController: NavController
     private val permissions = arrayOf(
         android.Manifest.permission.CAMERA,
         android.Manifest.permission.WRITE_EXTERNAL_STORAGE,
@@ -27,28 +32,26 @@ class DashboardActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_dashboard)
 
+        val navHostFragment = supportFragmentManager.findFragmentById(R.id.flFragment) as NavHostFragment
+        navController = navHostFragment.findNavController()
+
         bnvDashboard = findViewById(R.id.bnvDashboard)
 
-        val homeFragment = HomeFragment()
-        val notificationFragment = NotificationFragment()
-        val addPhotoFragment = AddPostFragment()
-        val searchFragment = SearchFragment()
-        val profileFragment = ProfileFragment()
-
         checkRunTimePermission()
-        setFragment(homeFragment)
         Toast.makeText(this, "${ServiceBuilder.token}", Toast.LENGTH_SHORT).show()
 
-        bnvDashboard.setOnNavigationItemSelectedListener {
-            when (it.itemId) {
-                R.id.miHome -> setFragment(homeFragment)
-                R.id.miProfile -> setFragment(profileFragment)
-                R.id.miNotifiation -> setFragment(notificationFragment)
-                R.id.miSearch -> setFragment(searchFragment)
-                R.id.miAddPhoto -> setFragment(addPhotoFragment)
-            }
-            true
-        }
+        bnvDashboard.setupWithNavController(navController)
+
+//        bnvDashboard.setOnNavigationItemSelectedListener {
+//            when (it.itemId) {
+//                R.id.miHome -> setFragment(homeFragment)
+//                R.id.miProfile -> setFragment(profileFragment)
+//                R.id.miNotifiation -> setFragment(notificationFragment)
+//                R.id.miSearch -> setFragment(searchFragment)
+//                R.id.miAddPhoto -> setFragment(addPhotoFragment)
+//            }
+//            true
+//        }
 
 
     }

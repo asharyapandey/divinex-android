@@ -6,10 +6,13 @@
     android:layout_height="match_parent"
     tools:context=".ui.DashboardActivity">
 
-    <FrameLayout
+    <fragment
         android:id="@+id/flFragment"
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:name="androidx.navigation.fragment.NavHostFragment"
+        app:navGraph ="@navigation/app_navigation"
+        app:defaultNavHost="true"
         app:layout_constraintBottom_toTopOf="@+id/bnvDashboard"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
