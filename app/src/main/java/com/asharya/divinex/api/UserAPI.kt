@@ -2,11 +2,9 @@ package com.asharya.divinex.api
 
 import com.asharya.divinex.model.User
 import com.asharya.divinex.response.LoginResponse
+import com.asharya.divinex.response.UserResponse
 import retrofit2.Response
-import retrofit2.http.Body
-import retrofit2.http.Field
-import retrofit2.http.FormUrlEncoded
-import retrofit2.http.POST
+import retrofit2.http.*
 
 interface UserAPI {
 
@@ -23,5 +21,10 @@ interface UserAPI {
         @Field("username") username : String,
         @Field("password") password : String
     ) : Response<LoginResponse>
+
+    @GET("user")
+    suspend fun getCurrentUser(
+        @Header("auth-token") token: String
+    ) : Response<UserResponse>
 
 }
