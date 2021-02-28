@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.asharya.divinex.R
 
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
@@ -26,9 +27,12 @@ class MapsFragment : Fragment() {
          * install it inside the SupportMapFragment. This method will only be triggered once the
          * user has installed Google Play services and returned to the app.
          */
-        val sydney = LatLng(-34.0, 151.0)
-        googleMap.addMarker(MarkerOptions().position(sydney).title("Marker in Sydney"))
-        googleMap.moveCamera(CameraUpdateFactory.newLatLng(sydney))
+        val divinex= LatLng(-34.0, 151.0)
+        googleMap.addMarker(MarkerOptions().position(divinex).title("DivineX HQ"))
+        googleMap.animateCamera(
+            CameraUpdateFactory.newLatLngZoom(divinex, 15F),3000,null
+        )
+        googleMap.uiSettings.isZoomControlsEnabled = true
     }
 
     override fun onCreateView(
