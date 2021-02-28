@@ -6,6 +6,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.asharya.divinex.entity.FeedPost
 import com.asharya.divinex.model.Post
 import com.asharya.divinex.repository.PostRepository
 import kotlinx.coroutines.launch
@@ -17,21 +18,13 @@ import java.lang.Exception
 
 class HomeViewModel(private val repository: PostRepository): ViewModel() {
 
-    private val _posts= MutableLiveData<List<Post>>()
-    val posts: LiveData<List<Post>>
+    private val _posts= MutableLiveData<List<FeedPost>>()
+    val posts: LiveData<List<FeedPost>>
     get() = _posts
-    init {
-    }
 
     fun getPosts() {
         viewModelScope.launch {
-            try {
-                val response = repository.getPostFeed()
-                if (response.success == true)
-                    _posts.value = response.posts!!
-            } catch (ex: Exception) {
-                Log.i("AddPostViewModel", ex.toString())
-            }
+            _posts.value = repository.getPostFeed()
         }
     }
 
