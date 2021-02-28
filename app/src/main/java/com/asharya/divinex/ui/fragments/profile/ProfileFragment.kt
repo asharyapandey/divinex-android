@@ -52,9 +52,10 @@ class ProfileFragment : Fragment() {
         })
 
 
-//        btnLoadMaps.setOnClickListener {
-//            findNavController().navigate(R.id.mapsFragment)
-//        }
+        btnLoadMaps.setOnClickListener {
+            val action = ProfileFragmentDirections.actionProfileFragmentToMapsFragment()
+            findNavController().navigate(action)
+        }
         return view
     }
 }
