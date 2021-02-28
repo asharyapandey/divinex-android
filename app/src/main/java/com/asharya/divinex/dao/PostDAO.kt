@@ -1,22 +1,19 @@
 package com.asharya.divinex.dao
 
 import androidx.room.*
-import com.asharya.divinex.model.Post
+import com.asharya.divinex.entity.FeedPost
 
 @Dao
 interface PostDAO {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun addPost(post: Post)
+    suspend fun addPost(post: FeedPost)
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun addAllPosts(vararg post: Post)
+    @Query("select * from FeedPost")
+    suspend fun getAllPosts(): List<FeedPost>
 
-    @Query("select * from Post")
-    suspend fun getAllPosts(): List<Post>
-
-    @Query("select * from Post where _id=:id")
-    suspend fun getPost(id: String) : Post
+    @Query("select * from FeedPost where _id=:id")
+    suspend fun getPost(id: String) :FeedPost
 
     @Update
-    suspend fun updatePost(post: Post)
+    suspend fun updatePost(post: FeedPost)
 }

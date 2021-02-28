@@ -5,6 +5,7 @@ import com.asharya.divinex.api.ApiRequest
 import com.asharya.divinex.api.PostAPI
 import com.asharya.divinex.api.ServiceBuilder
 import com.asharya.divinex.dao.PostDAO
+import com.asharya.divinex.entity.FeedPost
 import com.asharya.divinex.model.Post
 import com.asharya.divinex.response.AddPostResponse
 import com.asharya.divinex.response.PostsResponse
@@ -15,24 +16,34 @@ class PostRepository(private val postDAO: PostDAO) : ApiRequest() {
     private val postAPI = ServiceBuilder.buildService(PostAPI::class.java)
 
     // add post
-    suspend fun addPost(caption: String, image: MultipartBody.Part) : AddPostResponse {
+    suspend fun addPost(caption: String, image: MultipartBody.Part): AddPostResponse {
         return apiRequest {
             postAPI.addPost(ServiceBuilder.token!!, caption, image)
         }
     }
-    suspend fun getPostFeed() : List<Post> {
+
+    suspend fun getPostFeed(): List<FeedPost> {
         refreshPosts()
         return postDAO.getAllPosts()
     }
 
     private suspend fun refreshPosts() {
         try {
-            val response =  apiRequest {
+            val response = apiRequest {
                 postAPI.getPostFeed(ServiceBuilder.token!!)
             }
             if (response.success == true) {
                 for (post in response.posts!!)
-                    postDAO.addPost(post)
+                    postDAO.addPost(
+                        FeedPost(
+                            _id = post._id,
+                            caption = post.caption,
+                            image = post.image,
+                            userID = post.user?._id,
+                            username = post.user?.username,
+                            profilePicture = post.user?.profilePicture
+                        )
+                    )
             }
 
         } catch (ex: Exception) {
@@ -40,7 +51,7 @@ class PostRepository(private val postDAO: PostDAO) : ApiRequest() {
         }
     }
 
-    suspend fun getUserPosts() : PostsResponse {
+    suspend fun getUserPosts(): PostsResponse {
         return apiRequest {
             postAPI.getUsersPost(ServiceBuilder.token!!)
         }

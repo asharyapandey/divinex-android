@@ -10,6 +10,8 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.RecyclerView
 import com.asharya.divinex.R
 import com.asharya.divinex.adapters.NewsFeedAdapter
+import com.asharya.divinex.api.ServiceBuilder
+import com.asharya.divinex.db.DivinexDB
 import com.asharya.divinex.repository.PostRepository
 
 class HomeFragment : Fragment() {
@@ -26,15 +28,16 @@ class HomeFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_home, container, false)
-        val repository = PostRepository()
-        viewModel = ViewModelProvider(this, HomeViewModelFactory(repository)).get(HomeViewModel::class.java)
+        val postDao = context?.let { DivinexDB.getInstance(it).getPostDAO() }
+        val repository = postDao?.let { PostRepository(it) }
+        viewModel = ViewModelProvider(this, HomeViewModelFactory(repository!!)).get(HomeViewModel::class.java)
         rvFeedPosts = view.findViewById(R.id.rvFeedPosts)
 
         adapter = context?.let { NewsFeedAdapter(it) }!!
         rvFeedPosts.adapter = adapter
         viewModel.getPosts()
 
-        viewModel.posts.observe(this, Observer { posts ->
+        viewModel.posts.observe(viewLifecycleOwner, Observer { posts ->
             adapter.addPostList(posts)
         })
         return view

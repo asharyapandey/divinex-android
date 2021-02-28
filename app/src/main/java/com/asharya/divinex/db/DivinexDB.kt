@@ -6,10 +6,11 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import com.asharya.divinex.dao.PostDAO
 import com.asharya.divinex.dao.UserDAO
+import com.asharya.divinex.entity.FeedPost
 import com.asharya.divinex.model.User
 
 @Database(
-    entities = [(User::class)],
+    entities = [(User::class), (FeedPost::class)],
     version = 1
 )
 abstract class DivinexDB : RoomDatabase() {
