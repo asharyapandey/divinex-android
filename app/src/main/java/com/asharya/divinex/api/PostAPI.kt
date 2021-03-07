@@ -26,7 +26,4 @@ interface PostAPI {
     suspend fun getUsersPost(
         @Header("auth-token") token: String,
     ): Response<PostsResponse>
-
-
-
 }

@@ -2,6 +2,7 @@ package com.asharya.divinex.api
 
 import com.asharya.divinex.model.User
 import com.asharya.divinex.response.LoginResponse
+import com.asharya.divinex.response.SearchResponse
 import com.asharya.divinex.response.UserResponse
 import retrofit2.Response
 import retrofit2.http.*
@@ -27,4 +28,9 @@ interface UserAPI {
         @Header("auth-token") token: String
     ) : Response<UserResponse>
 
+    @GET("user/search")
+    suspend fun getSearchUsers(
+        @Header("auth-token") token: String,
+        @Query("term") term: String
+    ) : Response<SearchResponse>
 }
