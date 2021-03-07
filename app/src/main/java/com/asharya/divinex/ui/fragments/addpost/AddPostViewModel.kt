@@ -9,8 +9,11 @@ import androidx.lifecycle.viewModelScope
 import com.asharya.divinex.repository.PostRepository
 import kotlinx.coroutines.launch
 import okhttp3.MediaType
+import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
+import okhttp3.RequestBody.Companion.asRequestBody
+import okhttp3.RequestBody.Companion.toRequestBody
 import java.io.File
 import java.lang.Exception
 
@@ -28,9 +31,9 @@ class AddPostViewModel(private val repository: PostRepository): ViewModel() {
             val extension = MimeTypeMap.getFileExtensionFromUrl(image)
             val mimeType = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension)
 
-            val reqFile = RequestBody.create(MediaType.parse(mimeType),file)
+            val reqFile = file.asRequestBody(mimeType?.toMediaType())
             val body = MultipartBody.Part.createFormData("image",file.name, reqFile)
-            val reqCaption = RequestBody.create(MediaType.parse("text/plain"), caption)
+            val reqCaption = caption.toRequestBody("text/plain".toMediaType())
             try {
                 val response = repository.addPost(reqCaption, body)
                 if (response.success == true)
