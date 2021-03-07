@@ -1,6 +1,7 @@
 package com.asharya.divinex.api
 
 import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
@@ -8,11 +9,12 @@ object ServiceBuilder {
     private const val BASE_URL = "http://10.0.2.2:5000/api/"
 //    private const val BASE_URL = "http://localhost:5000/api/"
 
-
-
     var token : String? = null
 
-    private val okHttp = OkHttpClient.Builder()
+    // logger
+    private val logger = HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY)
+
+    private val okHttp = OkHttpClient.Builder().addInterceptor(logger)
 
     private val retrofitBuilder = Retrofit.Builder()
         .baseUrl(BASE_URL)
