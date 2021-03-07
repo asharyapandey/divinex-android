@@ -30,8 +30,9 @@ class AddPostViewModel(private val repository: PostRepository): ViewModel() {
 
             val reqFile = RequestBody.create(MediaType.parse(mimeType),file)
             val body = MultipartBody.Part.createFormData("image",file.name, reqFile)
+            val reqCaption = RequestBody.create(MediaType.parse("text/plain"), caption)
             try {
-                val response = repository.addPost(caption, body)
+                val response = repository.addPost(reqCaption, body)
                 if (response.success == true)
                     _postAdded.value = true
             } catch (ex: Exception) {

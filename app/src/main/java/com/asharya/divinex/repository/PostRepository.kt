@@ -11,13 +11,14 @@ import com.asharya.divinex.model.Post
 import com.asharya.divinex.response.AddPostResponse
 import com.asharya.divinex.response.PostsResponse
 import okhttp3.MultipartBody
+import okhttp3.RequestBody
 import java.lang.Exception
 
 class PostRepository(private val postDAO: PostDAO) : ApiRequest() {
     private val postAPI = ServiceBuilder.buildService(PostAPI::class.java)
 
     // add post
-    suspend fun addPost(caption: String, image: MultipartBody.Part): AddPostResponse {
+    suspend fun addPost(caption: RequestBody, image: MultipartBody.Part): AddPostResponse {
         return apiRequest {
             postAPI.addPost(ServiceBuilder.token!!, caption, image)
         }
