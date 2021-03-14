@@ -33,6 +33,12 @@ class UserRepository : ApiRequest() {
         }
     }
 
+    suspend fun getUserById(id: String): UserResponse {
+        return apiRequest {
+            userApi.getUserById(ServiceBuilder.token!!, id)
+        }
+    }
+
     suspend fun getSearchedUsers(term: String): List<User> {
         try {
             val response = apiRequest {

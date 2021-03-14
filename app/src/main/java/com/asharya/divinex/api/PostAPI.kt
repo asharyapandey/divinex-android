@@ -26,4 +26,10 @@ interface PostAPI {
     suspend fun getUsersPost(
         @Header("auth-token") token: String,
     ): Response<PostsResponse>
+
+    @GET("post/user/{id}")
+    suspend fun getUsersPostById(
+        @Header("auth-token") token: String,
+        @Path("id") id: String
+    ): Response<PostsResponse>
 }
