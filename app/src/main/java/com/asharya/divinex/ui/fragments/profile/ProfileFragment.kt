@@ -24,7 +24,7 @@ import de.hdodenhof.circleimageview.CircleImageView
 class ProfileFragment : Fragment() {
     private lateinit var civProfile: CircleImageView
     private lateinit var tvUsername : TextView
-    private lateinit var viewModel: ViewProfileViewModel
+    private lateinit var viewModel: ProfileViewModel
     private lateinit var btnLoadMaps: Button
     private lateinit var rvUserPosts: RecyclerView
 
@@ -52,10 +52,9 @@ class ProfileFragment : Fragment() {
         val repository = UserRepository()
         val postDao = context?.let { DivinexDB.getInstance(it).getPostDAO() }
         val postRepository = postDao?.let { PostRepository(it) }
-        viewModel = ViewModelProvider(this, ViewProfileViewModelFactory(repository, postRepository!!)).get(ViewProfileViewModel::class.java)
+        viewModel = ViewModelProvider(this, ProfileViewModelFactory(repository, postRepository!!)).get(ProfileViewModel::class.java)
 
         viewModel.getCurrentUser()
-        viewModel.getCurrentUserPosts()
 
         viewModel.user.observe(viewLifecycleOwner, Observer { user ->
             tvUsername.text = user.username
@@ -64,6 +63,7 @@ class ProfileFragment : Fragment() {
                 profileImagePath = profileImagePath.replace("\\", "/")
                 Glide.with(requireContext()).load(profileImagePath).into(civProfile)
             }
+            viewModel.getCurrentUserPosts(user._id)
         })
 
         viewModel.posts.observe(viewLifecycleOwner, Observer { posts ->

@@ -1,7 +1,6 @@
 package com.asharya.divinex.adapters
 
 import android.content.Context
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,13 +9,11 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.asharya.divinex.R
 import com.asharya.divinex.api.ServiceBuilder
-import com.asharya.divinex.entity.FeedPost
-import com.asharya.divinex.model.Post
 import com.bumptech.glide.Glide
 import de.hdodenhof.circleimageview.CircleImageView
 
 class NewsFeedAdapter(val context: Context) : RecyclerView.Adapter<NewsFeedAdapter.NewsFeedViewHolder>() {
-    private var postList = emptyList<FeedPost>()
+    private var postList = emptyList<com.asharya.divinex.entity.Post>()
 
     inner class NewsFeedViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val imgCardProfile: CircleImageView
@@ -64,7 +61,7 @@ class NewsFeedAdapter(val context: Context) : RecyclerView.Adapter<NewsFeedAdapt
 
     override fun getItemCount() = postList.size
 
-    fun addPostList(list: List<FeedPost>) {
+    fun addPostList(list: List<com.asharya.divinex.entity.Post>) {
         postList = list
         notifyDataSetChanged()
     }

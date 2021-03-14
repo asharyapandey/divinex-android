@@ -7,6 +7,6 @@ import com.asharya.divinex.repository.UserRepository
 
 class ProfileViewModelFactory(private val userRepository: UserRepository, private val postRepository: PostRepository): ViewModelProvider.Factory {
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-       return ViewProfileViewModel(userRepository, postRepository) as T
+       return ProfileViewModel(userRepository, postRepository) as T
     }
 }

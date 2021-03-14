@@ -5,11 +5,9 @@ import com.asharya.divinex.api.ApiRequest
 import com.asharya.divinex.api.PostAPI
 import com.asharya.divinex.api.ServiceBuilder
 import com.asharya.divinex.dao.PostDAO
-import com.asharya.divinex.entity.FeedPost
+import com.asharya.divinex.entity.Post
 import com.asharya.divinex.entity.UserPost
-import com.asharya.divinex.model.Post
 import com.asharya.divinex.response.AddPostResponse
-import com.asharya.divinex.response.PostsResponse
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import java.lang.Exception
@@ -24,7 +22,7 @@ class PostRepository(private val postDAO: PostDAO) : ApiRequest() {
         }
     }
 
-    suspend fun getPostFeed(): List<FeedPost> {
+    suspend fun getPostFeed(): List<Post> {
         refreshPosts()
         return postDAO.getAllPosts()
     }
@@ -37,7 +35,7 @@ class PostRepository(private val postDAO: PostDAO) : ApiRequest() {
             if (response.success == true) {
                 for (post in response.posts!!)
                     postDAO.addPost(
-                        FeedPost(
+                        Post(
                             _id = post._id,
                             caption = post.caption,
                             image = post.image,
@@ -53,11 +51,10 @@ class PostRepository(private val postDAO: PostDAO) : ApiRequest() {
         }
     }
 
-    suspend fun getUserPosts(): List<UserPost> {
+    suspend fun getUserPosts(userID: String): List<Post> {
         refreshUserPosts()
-        return postDAO.getAllUserPosts()
+        return postDAO.getAllUserPost(userID)
     }
-
     private suspend fun refreshUserPosts() {
         try {
             val response = apiRequest {
@@ -65,8 +62,8 @@ class PostRepository(private val postDAO: PostDAO) : ApiRequest() {
             }
             if (response.success == true) {
                 for (post in response.posts!!)
-                    postDAO.addUserPost(
-                        UserPost(
+                    postDAO.addPost(
+                        Post(
                             _id = post._id,
                             caption = post.caption,
                             image = post.image,
@@ -81,4 +78,8 @@ class PostRepository(private val postDAO: PostDAO) : ApiRequest() {
             Log.e("PostRepo", ex.toString())
         }
     }
+    suspend fun deleteUserPosts(userID: String): List<Post> {
+        return postDAO.deleteAllUserPost(userID)
+    }
+
 }
