@@ -33,7 +33,11 @@
         android:id="@+id/searchFragment"
         android:name="com.asharya.divinex.ui.fragments.search.SearchFragment"
         android:label="fragment_search"
-        tools:layout="@layout/fragment_search" />
+        tools:layout="@layout/fragment_search" >
+        <action
+            android:id="@+id/action_searchFragment_to_viewProfileFragment"
+            app:destination="@id/viewProfileFragment" />
+    </fragment>
     <fragment
         android:id="@+id/notificationFragment"
         android:name="com.asharya.divinex.ui.fragments.notification.NotificationFragment"
@@ -43,5 +47,10 @@
         android:id="@+id/viewProfileFragment"
         android:name="com.asharya.divinex.ui.fragments.profile.ViewProfileFragment"
         android:label="fragment_view_profile"
-        tools:layout="@layout/fragment_view_profile" />
+        tools:layout="@layout/fragment_view_profile" >
+        <argument
+            android:name="userID"
+            app:argType="string"
+            android:defaultValue='""' />
+    </fragment>
 </navigation>

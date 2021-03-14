@@ -13,7 +13,7 @@ import com.asharya.divinex.model.User
 import com.bumptech.glide.Glide
 import de.hdodenhof.circleimageview.CircleImageView
 
-class UserAdapter(val context: Context) : RecyclerView.Adapter<UserAdapter.UserViewHolder>() {
+class UserAdapter(val context: Context, val listener: OnItemClick) : RecyclerView.Adapter<UserAdapter.UserViewHolder>() {
     private var userList = emptyList<User>()
 
     inner class UserViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -22,6 +22,12 @@ class UserAdapter(val context: Context) : RecyclerView.Adapter<UserAdapter.UserV
         init {
             civSearchUser= itemView.findViewById(R.id.civSearchUser)
             tvSearchUsername = itemView.findViewById(R.id.tvSearchUsername)
+
+            itemView.setOnClickListener {
+                val position = adapterPosition
+                if (position != RecyclerView.NO_POSITION)
+                listener.onClick(userList[position])
+            }
         }
     }
 
@@ -35,16 +41,20 @@ class UserAdapter(val context: Context) : RecyclerView.Adapter<UserAdapter.UserV
 
         holder.tvSearchUsername.text = user.username
 
-        var postImagePath = ServiceBuilder.loadImagePath() + user.profilePicture
-        postImagePath = postImagePath.replace("\\", "/")
-        Glide.with(context).load(postImagePath).into(holder.civSearchUser)
+        var profileImagePath = ServiceBuilder.loadImagePath()
+        if (user.profilePicture != null) {
+            profileImagePath += user.profilePicture ?: ""
+            profileImagePath = profileImagePath.replace("\\", "/")
+        } else {
+            profileImagePath += "images/profile_picture/male_img.png"
+        }
+        Glide.with(context).load(profileImagePath).into(holder.civSearchUser)
     }
 
     override fun getItemCount() = userList.size
 
-    fun addUserList(list: List<User>) {
-        userList = list
-        notifyDataSetChanged()
+    interface OnItemClick {
+        fun onClick(user: User)
     }
 
     fun submitList(newUserList: List<User>) {
