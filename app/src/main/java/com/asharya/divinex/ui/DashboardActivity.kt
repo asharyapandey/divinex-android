@@ -12,11 +12,6 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.setupWithNavController
 import com.asharya.divinex.R
 import com.asharya.divinex.api.ServiceBuilder
-import com.asharya.divinex.ui.fragments.addpost.AddPostFragment
-import com.asharya.divinex.ui.fragments.home.HomeFragment
-import com.asharya.divinex.ui.fragments.notification.NotificationFragment
-import com.asharya.divinex.ui.fragments.profile.ProfileFragment
-import com.asharya.divinex.ui.fragments.search.SearchFragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class DashboardActivity : AppCompatActivity() {

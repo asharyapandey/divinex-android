@@ -21,10 +21,10 @@ import com.asharya.divinex.repository.UserRepository
 import com.bumptech.glide.Glide
 import de.hdodenhof.circleimageview.CircleImageView
 
-class ProfileFragment : Fragment() {
+class ViewProfileFragment : Fragment() {
     private lateinit var civProfile: CircleImageView
     private lateinit var tvUsername : TextView
-    private lateinit var viewModel: ViewProfileViewModel
+    private lateinit var viewModelView: ViewProfileViewModel
     private lateinit var btnLoadMaps: Button
     private lateinit var rvUserPosts: RecyclerView
 
@@ -37,7 +37,7 @@ class ProfileFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val view = inflater.inflate(R.layout.fragment_profile, container, false)
+        val view = inflater.inflate(R.layout.fragment_view_profile, container, false)
 
         civProfile = view.findViewById(R.id.civProfile)
         tvUsername = view.findViewById(R.id.tvUsername)
@@ -52,12 +52,12 @@ class ProfileFragment : Fragment() {
         val repository = UserRepository()
         val postDao = context?.let { DivinexDB.getInstance(it).getPostDAO() }
         val postRepository = postDao?.let { PostRepository(it) }
-        viewModel = ViewModelProvider(this, ViewProfileViewModelFactory(repository, postRepository!!)).get(ViewProfileViewModel::class.java)
+        viewModelView = ViewModelProvider(this, ViewProfileViewModelFactory(repository, postRepository!!)).get(ViewProfileViewModel::class.java)
 
-        viewModel.getCurrentUser()
-        viewModel.getCurrentUserPosts()
+        viewModelView.getCurrentUser()
+        viewModelView.getCurrentUserPosts()
 
-        viewModel.user.observe(viewLifecycleOwner, Observer { user ->
+        viewModelView.user.observe(viewLifecycleOwner, Observer { user ->
             tvUsername.text = user.username
             if (user.profilePicture != null) {
                 var profileImagePath = ServiceBuilder.loadImagePath() + user.profilePicture
@@ -66,7 +66,7 @@ class ProfileFragment : Fragment() {
             }
         })
 
-        viewModel.posts.observe(viewLifecycleOwner, Observer { posts ->
+        viewModelView.posts.observe(viewLifecycleOwner, Observer { posts ->
             adapter?.addPostList(posts)
         })
 

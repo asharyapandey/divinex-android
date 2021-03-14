@@ -12,7 +12,7 @@
         tools:layout="@layout/fragment_maps" />
     <fragment
         android:id="@+id/profileFragment"
-        android:name="com.asharya.divinex.ui.fragments.profile.ProfileFragment"
+        android:name="com.asharya.divinex.ui.fragments.profile.ViewProfileFragment"
         android:label="fragment_profile"
         tools:layout="@layout/fragment_profile" >
         <action
