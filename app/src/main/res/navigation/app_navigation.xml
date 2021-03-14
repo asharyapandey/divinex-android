@@ -12,7 +12,7 @@
         tools:layout="@layout/fragment_maps" />
     <fragment
         android:id="@+id/profileFragment"
-        android:name="com.asharya.divinex.ui.fragments.profile.ViewProfileFragment"
+        android:name="com.asharya.divinex.ui.fragments.profile.ProfileFragment"
         android:label="fragment_profile"
         tools:layout="@layout/fragment_profile" >
         <action
@@ -39,4 +39,9 @@
         android:name="com.asharya.divinex.ui.fragments.notification.NotificationFragment"
         android:label="fragment_notification"
         tools:layout="@layout/fragment_notification" />
+    <fragment
+        android:id="@+id/viewProfileFragment"
+        android:name="com.asharya.divinex.ui.fragments.profile.ViewProfileFragment"
+        android:label="fragment_view_profile"
+        tools:layout="@layout/fragment_view_profile" />
 </navigation>

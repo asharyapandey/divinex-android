@@ -37,7 +37,7 @@ class SearchFragment : Fragment(R.layout.fragment_search) {
         viewModel = ViewModelProvider(this, SearchViewModelFactory(repository)).get(SearchViewModel::class.java)
 
         viewModel.users.observe(viewLifecycleOwner, Observer { users ->
-            adapter?.addUserList(users)
+            adapter?.submitList(users)
         })
 
         etSearch.addTextChangedListener { text ->
