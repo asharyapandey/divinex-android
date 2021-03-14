@@ -4,7 +4,7 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 
 @Entity
-data class FeedPost(
+data class Post(
     @PrimaryKey
     var _id : String,
     var caption: String? = null,

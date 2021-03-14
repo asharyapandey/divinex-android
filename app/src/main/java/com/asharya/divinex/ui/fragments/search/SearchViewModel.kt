@@ -4,7 +4,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.asharya.divinex.entity.FeedPost
 import com.asharya.divinex.model.User
 import com.asharya.divinex.repository.UserRepository
 import kotlinx.coroutines.launch

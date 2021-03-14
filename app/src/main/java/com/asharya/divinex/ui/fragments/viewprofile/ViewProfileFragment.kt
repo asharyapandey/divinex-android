@@ -56,7 +56,7 @@ class ViewProfileFragment : Fragment() {
         viewModelView = ViewModelProvider(this, ViewProfileViewModelFactory(repository, postRepository!!)).get(ViewProfileViewModel::class.java)
 
         viewModelView.getCurrentUser()
-        viewModelView.getCurrentUserPosts()
+        viewModelView.getCurrentUserPosts(args.userID)
 
         viewModelView.user.observe(viewLifecycleOwner, Observer { user ->
             tvUsername.text = user.username
