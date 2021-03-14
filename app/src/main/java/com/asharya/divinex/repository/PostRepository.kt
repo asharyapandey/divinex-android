@@ -55,6 +55,7 @@ class PostRepository(private val postDAO: PostDAO) : ApiRequest() {
         refreshUserPosts()
         return postDAO.getAllUserPost(userID)
     }
+
     private suspend fun refreshUserPosts() {
         try {
             val response = apiRequest {
@@ -78,8 +79,9 @@ class PostRepository(private val postDAO: PostDAO) : ApiRequest() {
             Log.e("PostRepo", ex.toString())
         }
     }
-    suspend fun deleteUserPosts(userID: String): List<Post> {
-        return postDAO.deleteAllUserPost(userID)
+
+    suspend fun deleteUserPosts(userID: String) {
+        postDAO.deleteAllUserPost(userID)
     }
 
 }

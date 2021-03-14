@@ -27,6 +27,9 @@ class ProfileFragment : Fragment() {
     private lateinit var viewModel: ProfileViewModel
     private lateinit var btnLoadMaps: Button
     private lateinit var rvUserPosts: RecyclerView
+    private lateinit var tvFollowers: TextView
+    private lateinit var tvFollowing: TextView
+    private lateinit var tvPostNumber: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,6 +46,9 @@ class ProfileFragment : Fragment() {
         tvUsername = view.findViewById(R.id.tvUsername)
         btnLoadMaps = view.findViewById(R.id.btnLoadMaps)
         rvUserPosts = view.findViewById(R.id.rvUserPosts)
+        tvFollowers = view.findViewById(R.id.tvFollowers)
+        tvFollowing= view.findViewById(R.id.tvFollowing)
+        tvPostNumber= view.findViewById(R.id.tvPostNumber)
 
         // for RV
         val adapter = context?.let { UserPostsAdapter(it) }
@@ -63,11 +69,14 @@ class ProfileFragment : Fragment() {
                 profileImagePath = profileImagePath.replace("\\", "/")
                 Glide.with(requireContext()).load(profileImagePath).into(civProfile)
             }
+            tvFollowers.text = user.followers.size.toString()
+            tvFollowing.text = user.following.size.toString()
             viewModel.getCurrentUserPosts(user._id)
         })
 
         viewModel.posts.observe(viewLifecycleOwner, Observer { posts ->
             adapter?.addPostList(posts)
+            tvPostNumber.text = posts.size.toString()
         })
 
 
