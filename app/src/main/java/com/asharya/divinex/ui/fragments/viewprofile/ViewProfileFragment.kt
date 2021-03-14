@@ -54,7 +54,7 @@ class ViewProfileFragment : Fragment() {
         val postDao = context?.let { DivinexDB.getInstance(it).getPostDAO() }
         val postRepository = postDao?.let { PostRepository(it) }
         viewModelView = ViewModelProvider(this, ViewProfileViewModelFactory(repository, postRepository!!)).get(ViewProfileViewModel::class.java)
-
+        viewModelView.userID = args.userID
         viewModelView.getCurrentUser()
         viewModelView.getCurrentUserPosts(args.userID)
 

@@ -78,5 +78,8 @@ class PostRepository(private val postDAO: PostDAO) : ApiRequest() {
             Log.e("PostRepo", ex.toString())
         }
     }
+    suspend fun deleteUserPosts(userID: String): List<Post> {
+        return postDAO.deleteAllUserPost(userID)
+    }
 
 }
