@@ -70,16 +70,6 @@ class RegisterActivity : AppCompatActivity() {
         startActivity(Intent(this, LoginActivity::class.java))
     }
 
-    private fun addToDatabase(user: User) {
-        CoroutineScope(Dispatchers.IO).launch {
-            DivinexDB.getInstance(this@RegisterActivity).getUserDAO().insertUser(user)
-
-            withContext(Dispatchers.Main) {
-                Toast.makeText(this@RegisterActivity, "User Registered", Toast.LENGTH_SHORT).show()
-            }
-        }
-    }
-
     private fun registerUser(user: User) {
         CoroutineScope(Dispatchers.IO).launch {
             try {

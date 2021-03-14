@@ -55,7 +55,7 @@ class ViewProfileFragment : Fragment() {
         val postRepository = postDao?.let { PostRepository(it) }
         viewModelView = ViewModelProvider(this, ViewProfileViewModelFactory(repository, postRepository!!)).get(ViewProfileViewModel::class.java)
         viewModelView.userID = args.userID
-        viewModelView.getCurrentUser()
+        viewModelView.getCurrentUser(args.userID)
         viewModelView.getCurrentUserPosts(args.userID)
 
         viewModelView.user.observe(viewLifecycleOwner, Observer { user ->

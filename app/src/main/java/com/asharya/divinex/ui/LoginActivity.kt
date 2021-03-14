@@ -53,30 +53,6 @@ class LoginActivity : AppCompatActivity() {
         }
     }
 
-    private fun login(username: String, password: String) {
-        CoroutineScope(Dispatchers.IO).launch {
-            var user: User? = null
-            user = DivinexDB.getInstance(this@LoginActivity).getUserDAO()
-                .retrieveUser(username, password)
-
-            if (user != null) {
-                withContext(Dispatchers.Main) {
-                    saveSharedPref(username, password)
-                }
-                startActivity(Intent(this@LoginActivity, DashboardActivity::class.java))
-                finish()
-            } else {
-                withContext(Dispatchers.Main) {
-                    Toast.makeText(
-                        this@LoginActivity,
-                        "Either Username or Password is Incorrect",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                }
-            }
-
-        }
-    }
 
     private fun loginAPI(username: String, password: String) {
         CoroutineScope(Dispatchers.IO).launch {
