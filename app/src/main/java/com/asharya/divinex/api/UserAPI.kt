@@ -28,6 +28,12 @@ interface UserAPI {
         @Header("auth-token") token: String
     ) : Response<UserResponse>
 
+    @GET("user/{id}")
+    suspend fun getUserById(
+        @Header("auth-token") token: String,
+        @Path("id") id: String
+    ) : Response<UserResponse>
+
     @GET("user/search")
     suspend fun getSearchUsers(
         @Header("auth-token") token: String,

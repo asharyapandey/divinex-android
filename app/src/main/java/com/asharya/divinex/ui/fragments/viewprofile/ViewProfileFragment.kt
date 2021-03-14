@@ -10,6 +10,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.asharya.divinex.R
@@ -25,8 +26,9 @@ class ViewProfileFragment : Fragment() {
     private lateinit var civProfile: CircleImageView
     private lateinit var tvUsername : TextView
     private lateinit var viewModelView: ViewProfileViewModel
-    private lateinit var btnLoadMaps: Button
     private lateinit var rvUserPosts: RecyclerView
+
+    private val args by navArgs<ViewProfileFragmentArgs>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,7 +43,6 @@ class ViewProfileFragment : Fragment() {
 
         civProfile = view.findViewById(R.id.civProfile)
         tvUsername = view.findViewById(R.id.tvUsername)
-        btnLoadMaps = view.findViewById(R.id.btnLoadMaps)
         rvUserPosts = view.findViewById(R.id.rvUserPosts)
 
         // for RV
@@ -70,11 +71,6 @@ class ViewProfileFragment : Fragment() {
             adapter?.addPostList(posts)
         })
 
-
-        btnLoadMaps.setOnClickListener {
-            val action = ProfileFragmentDirections.actionProfileFragmentToMapsFragment()
-            findNavController().navigate(action)
-        }
         return view
     }
 }
