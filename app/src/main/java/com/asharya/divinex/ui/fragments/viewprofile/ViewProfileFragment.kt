@@ -71,8 +71,8 @@ class ViewProfileFragment : Fragment() {
                 profileImagePath = profileImagePath.replace("\\", "/")
                 Glide.with(requireContext()).load(profileImagePath).into(civProfile)
             }
-            tvFollowers.text = user.followers.size.toString()
-            tvFollowing.text = user.following.size.toString()
+            tvFollowers.text = user.followers?.size.toString()
+            tvFollowing.text = user.following?.size.toString()
         })
 
         viewModelView.posts.observe(viewLifecycleOwner, Observer { posts ->
@@ -81,5 +81,10 @@ class ViewProfileFragment : Fragment() {
         })
 
         return view
+    }
+
+    override fun onStop() {
+        viewModelView.deletePosts(args.userID)
+        super.onStop()
     }
 }

@@ -53,7 +53,7 @@ class SearchFragment : Fragment(R.layout.fragment_search), UserAdapter.OnItemCli
     }
 
     override fun onClick(user: User) {
-        val action = SearchFragmentDirections.actionSearchFragmentToViewProfileFragment(user._id)
+        val action = SearchFragmentDirections.actionSearchFragmentToViewProfileFragment(user._id!!)
         findNavController().navigate(action)
     }
 }

@@ -69,9 +69,9 @@ class ProfileFragment : Fragment() {
                 profileImagePath = profileImagePath.replace("\\", "/")
                 Glide.with(requireContext()).load(profileImagePath).into(civProfile)
             }
-            tvFollowers.text = user.followers.size.toString()
-            tvFollowing.text = user.following.size.toString()
-            viewModel.getCurrentUserPosts(user._id)
+            tvFollowers.text = user.followers?.size.toString()
+            tvFollowing.text = user.following?.size.toString()
+            user._id?.let { viewModel.getCurrentUserPosts(it) }
         })
 
         viewModel.posts.observe(viewLifecycleOwner, Observer { posts ->

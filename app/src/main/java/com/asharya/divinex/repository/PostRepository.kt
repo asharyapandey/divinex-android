@@ -52,14 +52,14 @@ class PostRepository(private val postDAO: PostDAO) : ApiRequest() {
     }
 
     suspend fun getUserPosts(userID: String): List<Post> {
-        refreshUserPosts()
+        refreshUserPosts(userID)
         return postDAO.getAllUserPost(userID)
     }
 
-    private suspend fun refreshUserPosts() {
+    private suspend fun refreshUserPosts(id: String) {
         try {
             val response = apiRequest {
-                postAPI.getUsersPost(ServiceBuilder.token!!)
+                postAPI.getUsersPostById(ServiceBuilder.token!!, id)
             }
             if (response.success == true) {
                 for (post in response.posts!!)
