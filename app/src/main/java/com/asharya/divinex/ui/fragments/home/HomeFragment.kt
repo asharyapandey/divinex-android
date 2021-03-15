@@ -38,7 +38,7 @@ class HomeFragment : Fragment() {
         viewModel.getPosts()
 
         viewModel.posts.observe(viewLifecycleOwner, Observer { posts ->
-            adapter.addPostList(posts)
+            adapter.submitList(posts)
         })
         return view
     }

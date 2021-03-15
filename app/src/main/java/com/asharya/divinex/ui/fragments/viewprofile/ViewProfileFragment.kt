@@ -27,6 +27,9 @@ class ViewProfileFragment : Fragment() {
     private lateinit var tvUsername : TextView
     private lateinit var viewModelView: ViewProfileViewModel
     private lateinit var rvUserPosts: RecyclerView
+    private lateinit var tvFollowers: TextView
+    private lateinit var tvFollowing: TextView
+    private lateinit var tvPostNumber: TextView
 
     private val args by navArgs<ViewProfileFragmentArgs>()
 
@@ -44,6 +47,9 @@ class ViewProfileFragment : Fragment() {
         civProfile = view.findViewById(R.id.civProfile)
         tvUsername = view.findViewById(R.id.tvUsername)
         rvUserPosts = view.findViewById(R.id.rvUserPosts)
+        tvFollowers = view.findViewById(R.id.tvFollowers)
+        tvFollowing= view.findViewById(R.id.tvFollowing)
+        tvPostNumber= view.findViewById(R.id.tvPostNumber)
 
         // for RV
         val adapter = context?.let { UserPostsAdapter(it) }
@@ -65,10 +71,13 @@ class ViewProfileFragment : Fragment() {
                 profileImagePath = profileImagePath.replace("\\", "/")
                 Glide.with(requireContext()).load(profileImagePath).into(civProfile)
             }
+            tvFollowers.text = user.followers.size.toString()
+            tvFollowing.text = user.following.size.toString()
         })
 
         viewModelView.posts.observe(viewLifecycleOwner, Observer { posts ->
-            adapter?.addPostList(posts)
+            adapter?.submitList(posts)
+            tvPostNumber.text = posts.size.toString()
         })
 
         return view

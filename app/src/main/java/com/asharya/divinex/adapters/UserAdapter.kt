@@ -88,6 +88,5 @@ class UserAdapter(val context: Context, val listener: OnItemClick) : RecyclerVie
         override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
             return oldUserList[oldItemPosition].equals(newUserList[newItemPosition])
         }
-
     }
 }

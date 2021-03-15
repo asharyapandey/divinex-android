@@ -75,7 +75,7 @@ class ProfileFragment : Fragment() {
         })
 
         viewModel.posts.observe(viewLifecycleOwner, Observer { posts ->
-            adapter?.addPostList(posts)
+            adapter?.submitList(posts)
             tvPostNumber.text = posts.size.toString()
         })
 
