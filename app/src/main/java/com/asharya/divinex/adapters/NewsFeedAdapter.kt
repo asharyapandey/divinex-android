@@ -15,7 +15,7 @@ import com.asharya.divinex.entity.Post
 import com.bumptech.glide.Glide
 import de.hdodenhof.circleimageview.CircleImageView
 
-class NewsFeedAdapter(val context: Context) : RecyclerView.Adapter<NewsFeedAdapter.NewsFeedViewHolder>() {
+class NewsFeedAdapter(val context: Context, val listenerPost: PostClickListener) : RecyclerView.Adapter<NewsFeedAdapter.NewsFeedViewHolder>() {
     private var postList = emptyList<Post>()
 
     inner class NewsFeedViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -34,6 +34,12 @@ class NewsFeedAdapter(val context: Context) : RecyclerView.Adapter<NewsFeedAdapt
             ivPhoto = itemView.findViewById(R.id.ivPhoto)
             tvCaption = itemView.findViewById(R.id.tvCaption)
             ibMore = itemView.findViewById(R.id.ibMore)
+
+            ibMore.setOnClickListener {
+                val position = adapterPosition
+                if (position != RecyclerView.NO_POSITION)
+                listenerPost.onIbMoreClick(postList[position], it)
+            }
         }
     }
 
@@ -100,5 +106,9 @@ class NewsFeedAdapter(val context: Context) : RecyclerView.Adapter<NewsFeedAdapt
         override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
             return (oldPostList[oldItemPosition] == newPostList[newItemPosition])
         }
+    }
+
+    interface PostClickListener {
+        fun onIbMoreClick(post: Post, view: View)
     }
 }

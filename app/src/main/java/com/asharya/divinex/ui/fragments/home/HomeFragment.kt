@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.PopupMenu
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -12,9 +13,10 @@ import com.asharya.divinex.R
 import com.asharya.divinex.adapters.NewsFeedAdapter
 import com.asharya.divinex.api.ServiceBuilder
 import com.asharya.divinex.db.DivinexDB
+import com.asharya.divinex.entity.Post
 import com.asharya.divinex.repository.PostRepository
 
-class HomeFragment : Fragment() {
+class HomeFragment : Fragment(), NewsFeedAdapter.PostClickListener {
     private lateinit var rvFeedPosts: RecyclerView
     private lateinit var viewModel: HomeViewModel
     private lateinit var adapter: NewsFeedAdapter
@@ -33,7 +35,7 @@ class HomeFragment : Fragment() {
         viewModel = ViewModelProvider(this, HomeViewModelFactory(repository!!)).get(HomeViewModel::class.java)
         rvFeedPosts = view.findViewById(R.id.rvFeedPosts)
 
-        adapter = context?.let { NewsFeedAdapter(it) }!!
+        adapter = context?.let { NewsFeedAdapter(it, this) }!!
         rvFeedPosts.adapter = adapter
         viewModel.getPosts()
 
@@ -41,5 +43,26 @@ class HomeFragment : Fragment() {
             adapter.submitList(posts)
         })
         return view
+    }
+
+    override fun onIbMoreClick(post: Post, view: View) {
+        val popupMenu = PopupMenu(context, view)
+        popupMenu.menuInflater.inflate(R.menu.update_delete, popupMenu.menu)
+        popupMenu.setOnMenuItemClickListener { item ->
+            when (item.itemId) {
+                R.id.menuDelete-> delete()
+                R.id.menuUpdate-> update()
+            }
+            true
+        }
+        popupMenu.show()
+    }
+
+    private fun update() {
+        TODO("Not yet implemented")
+    }
+
+    private fun delete() {
+        TODO("Not yet implemented")
     }
 }
