@@ -1,5 +1,6 @@
 package com.asharya.divinex.api
 
+import com.asharya.divinex.model.User
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -10,6 +11,7 @@ object ServiceBuilder {
 //    private const val BASE_URL = "http://localhost:5000/api/"
 
     var token : String? = null
+    var currentUser: User? = null
 
     // logger
     private val logger = HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY)

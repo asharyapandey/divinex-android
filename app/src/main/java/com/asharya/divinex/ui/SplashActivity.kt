@@ -35,6 +35,7 @@ class SplashActivity : AppCompatActivity() {
                 val response = repository.loginUser(username!!, password!!)
                 if (response.success == true) {
                     ServiceBuilder.token = response.token
+                    ServiceBuilder.currentUser = response.user
                     startActivity(Intent(this@SplashActivity, DashboardActivity::class.java))
                     finish()
                 } else {

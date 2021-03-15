@@ -33,7 +33,7 @@ class DashboardActivity : AppCompatActivity() {
         bnvDashboard = findViewById(R.id.bnvDashboard)
 
         checkRunTimePermission()
-        Toast.makeText(this, "${ServiceBuilder.token}", Toast.LENGTH_SHORT).show()
+        Toast.makeText(this, "${ServiceBuilder.token}, ${ServiceBuilder.currentUser.toString()}", Toast.LENGTH_SHORT).show()
 
         bnvDashboard.setupWithNavController(navController)
 

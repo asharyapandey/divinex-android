@@ -62,6 +62,7 @@ class LoginActivity : AppCompatActivity() {
                 if (response.success == true) {
                     saveSharedPref(username, password)
                     ServiceBuilder.token = response.token
+                    ServiceBuilder.currentUser = response.user
                     startActivity(Intent(this@LoginActivity, DashboardActivity::class.java))
                     finish()
                 } else {
