@@ -72,5 +72,13 @@
             android:name="position"
             app:argType="integer"
             android:defaultValue="1" />
+        <action
+            android:id="@+id/action_userPostsFragment_to_editPostFragment"
+            app:destination="@id/editPostFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/editPostFragment"
+        android:name="com.asharya.divinex.ui.fragments.editpost.EditPostFragment"
+        android:label="fragment_edit_post"
+        tools:layout="@layout/fragment_edit_post" />
 </navigation>

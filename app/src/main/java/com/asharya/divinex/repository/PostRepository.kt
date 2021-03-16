@@ -6,7 +6,6 @@ import com.asharya.divinex.api.PostAPI
 import com.asharya.divinex.api.ServiceBuilder
 import com.asharya.divinex.dao.PostDAO
 import com.asharya.divinex.entity.Post
-import com.asharya.divinex.entity.UserPost
 import com.asharya.divinex.response.AddPostResponse
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
