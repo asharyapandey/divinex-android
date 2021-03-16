@@ -9,6 +9,7 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -16,12 +17,13 @@ import com.asharya.divinex.R
 import com.asharya.divinex.adapters.UserPostsAdapter
 import com.asharya.divinex.api.ServiceBuilder
 import com.asharya.divinex.db.DivinexDB
+import com.asharya.divinex.entity.Post
 import com.asharya.divinex.repository.PostRepository
 import com.asharya.divinex.repository.UserRepository
 import com.bumptech.glide.Glide
 import de.hdodenhof.circleimageview.CircleImageView
 
-class ProfileFragment : Fragment() {
+class ProfileFragment : Fragment(), UserPostsAdapter.UserPostClickListener {
     private lateinit var civProfile: CircleImageView
     private lateinit var tvUsername : TextView
     private lateinit var viewModel: ProfileViewModel
@@ -30,6 +32,7 @@ class ProfileFragment : Fragment() {
     private lateinit var tvFollowers: TextView
     private lateinit var tvFollowing: TextView
     private lateinit var tvPostNumber: TextView
+    private lateinit var tvUsernameHeading: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -48,10 +51,11 @@ class ProfileFragment : Fragment() {
         rvUserPosts = view.findViewById(R.id.rvUserPosts)
         tvFollowers = view.findViewById(R.id.tvFollowers)
         tvFollowing= view.findViewById(R.id.tvFollowing)
+        tvUsernameHeading= view.findViewById(R.id.tvUsernameHeading)
         tvPostNumber= view.findViewById(R.id.tvPostNumber)
 
         // for RV
-        val adapter = context?.let { UserPostsAdapter(it) }
+        val adapter = context?.let { UserPostsAdapter(it, this) }
         rvUserPosts.adapter = adapter
         rvUserPosts.layoutManager = GridLayoutManager(context, 3 )
 
@@ -64,14 +68,15 @@ class ProfileFragment : Fragment() {
 
         viewModel.user.observe(viewLifecycleOwner, Observer { user ->
             tvUsername.text = user.username
+            tvUsernameHeading.text = user.username
             if (user.profilePicture != null) {
                 var profileImagePath = ServiceBuilder.loadImagePath() + user.profilePicture
                 profileImagePath = profileImagePath.replace("\\", "/")
                 Glide.with(requireContext()).load(profileImagePath).into(civProfile)
             }
-            tvFollowers.text = user.followers.size.toString()
-            tvFollowing.text = user.following.size.toString()
-            viewModel.getCurrentUserPosts(user._id)
+            tvFollowers.text = user.followers?.size.toString()
+            tvFollowing.text = user.following?.size.toString()
+            user._id?.let { viewModel.getCurrentUserPosts(it) }
         })
 
         viewModel.posts.observe(viewLifecycleOwner, Observer { posts ->
@@ -85,5 +90,10 @@ class ProfileFragment : Fragment() {
             findNavController().navigate(action)
         }
         return view
+    }
+
+    override fun itemClicked(post: Post, position: Int) {
+        val action = ProfileFragmentDirections.actionProfileFragmentToUserPostsFragment(post.userID!!, position)
+        findNavController().navigate(action)
     }
 }

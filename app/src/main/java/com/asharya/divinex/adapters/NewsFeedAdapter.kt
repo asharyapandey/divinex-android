@@ -4,6 +4,7 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.DiffUtil
@@ -14,7 +15,7 @@ import com.asharya.divinex.entity.Post
 import com.bumptech.glide.Glide
 import de.hdodenhof.circleimageview.CircleImageView
 
-class NewsFeedAdapter(val context: Context) : RecyclerView.Adapter<NewsFeedAdapter.NewsFeedViewHolder>() {
+class NewsFeedAdapter(val context: Context, val listenerPost: PostClickListener) : RecyclerView.Adapter<NewsFeedAdapter.NewsFeedViewHolder>() {
     private var postList = emptyList<Post>()
 
     inner class NewsFeedViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -24,6 +25,7 @@ class NewsFeedAdapter(val context: Context) : RecyclerView.Adapter<NewsFeedAdapt
         val tvProfileNameCaption: TextView
 
         val tvCaption : TextView
+        val ibMore: ImageButton
 
         init {
             imgCardProfile = itemView.findViewById(R.id.imgCardProfile)
@@ -31,6 +33,13 @@ class NewsFeedAdapter(val context: Context) : RecyclerView.Adapter<NewsFeedAdapt
             tvProfileNameCaption = itemView.findViewById(R.id.tvProfileNameCaption)
             ivPhoto = itemView.findViewById(R.id.ivPhoto)
             tvCaption = itemView.findViewById(R.id.tvCaption)
+            ibMore = itemView.findViewById(R.id.ibMore)
+
+            ibMore.setOnClickListener {
+                val position = adapterPosition
+                if (position != RecyclerView.NO_POSITION)
+                listenerPost.onIbMoreClick(postList[position], it)
+            }
         }
     }
 
@@ -46,8 +55,11 @@ class NewsFeedAdapter(val context: Context) : RecyclerView.Adapter<NewsFeedAdapt
         holder.tvProfileName.text = post.username ?: ""
         holder.tvProfileNameCaption.text = post.username ?: ""
 
+        if (post.userID != ServiceBuilder.currentUser?._id) {
+           holder.ibMore.visibility = View.INVISIBLE
+        }
+
         var postImagePath = ServiceBuilder.loadImagePath() + post.image
-        val wat = "http:/10.0.2.2:5000/images/posts/POST-Wed Feb 17 2021-vader.jpg"
         postImagePath = postImagePath.replace("\\", "/")
         Glide.with(context).load(postImagePath).into(holder.ivPhoto)
 
@@ -63,10 +75,6 @@ class NewsFeedAdapter(val context: Context) : RecyclerView.Adapter<NewsFeedAdapt
 
     override fun getItemCount() = postList.size
 
-    fun addPostList(list: List<Post>) {
-        postList = list
-        notifyDataSetChanged()
-    }
     fun submitList(newPostList: List<Post>) {
         val oldPostList= postList
         val diffResult: DiffUtil.DiffResult = DiffUtil.calculateDiff(
@@ -98,5 +106,9 @@ class NewsFeedAdapter(val context: Context) : RecyclerView.Adapter<NewsFeedAdapt
         override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
             return (oldPostList[oldItemPosition] == newPostList[newItemPosition])
         }
+    }
+
+    interface PostClickListener {
+        fun onIbMoreClick(post: Post, view: View)
     }
 }

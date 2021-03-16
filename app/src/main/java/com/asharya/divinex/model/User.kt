@@ -4,14 +4,14 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 
 data class User(
-    var _id : String,
+    var _id : String? = null,
     var username: String,
     var email: String,
     var gender: String,
-    var profilePicture: String,
-    var password: String,
-    var followers: List<User>,
-    var following: List<User>
+    var profilePicture: String? =null,
+    var password: String? =  null,
+    var followers: List<User>? = null,
+    var following: List<User>? = null
 ) {
     override fun equals(other: Any?): Boolean {
         if (javaClass != other?.javaClass) return false

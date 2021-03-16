@@ -17,12 +17,13 @@ import com.asharya.divinex.R
 import com.asharya.divinex.adapters.UserPostsAdapter
 import com.asharya.divinex.api.ServiceBuilder
 import com.asharya.divinex.db.DivinexDB
+import com.asharya.divinex.entity.Post
 import com.asharya.divinex.repository.PostRepository
 import com.asharya.divinex.repository.UserRepository
 import com.bumptech.glide.Glide
 import de.hdodenhof.circleimageview.CircleImageView
 
-class ViewProfileFragment : Fragment() {
+class ViewProfileFragment : Fragment(), UserPostsAdapter.UserPostClickListener {
     private lateinit var civProfile: CircleImageView
     private lateinit var tvUsername : TextView
     private lateinit var viewModelView: ViewProfileViewModel
@@ -52,7 +53,7 @@ class ViewProfileFragment : Fragment() {
         tvPostNumber= view.findViewById(R.id.tvPostNumber)
 
         // for RV
-        val adapter = context?.let { UserPostsAdapter(it) }
+        val adapter = context?.let { UserPostsAdapter(it, this) }
         rvUserPosts.adapter = adapter
         rvUserPosts.layoutManager = GridLayoutManager(context, 3 )
 
@@ -71,8 +72,8 @@ class ViewProfileFragment : Fragment() {
                 profileImagePath = profileImagePath.replace("\\", "/")
                 Glide.with(requireContext()).load(profileImagePath).into(civProfile)
             }
-            tvFollowers.text = user.followers.size.toString()
-            tvFollowing.text = user.following.size.toString()
+            tvFollowers.text = user.followers?.size.toString()
+            tvFollowing.text = user.following?.size.toString()
         })
 
         viewModelView.posts.observe(viewLifecycleOwner, Observer { posts ->
@@ -81,5 +82,15 @@ class ViewProfileFragment : Fragment() {
         })
 
         return view
+    }
+
+    override fun onStop() {
+        viewModelView.deletePosts(args.userID)
+        super.onStop()
+    }
+
+    override fun itemClicked(post: Post, position: Int) {
+        val action = ViewProfileFragmentDirections.actionViewProfileFragmentToUserPostsFragment(post.userID!!, position)
+        findNavController().navigate(action)
     }
 }

@@ -1,4 +1,4 @@
-package com.asharya.divinex.ui.fragments.home
+package com.asharya.divinex.ui.fragments.userposts
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -8,15 +8,15 @@ import com.asharya.divinex.entity.Post
 import com.asharya.divinex.repository.PostRepository
 import kotlinx.coroutines.launch
 
-class HomeViewModel(private val repository: PostRepository): ViewModel() {
+class UserPostsViewModel(private val repository: PostRepository): ViewModel() {
 
-    private val _posts= MutableLiveData<List<com.asharya.divinex.entity.Post>>()
-    val posts: LiveData<List<com.asharya.divinex.entity.Post>>
+    private val _posts= MutableLiveData<List<Post>>()
+    val posts: LiveData<List<Post>>
     get() = _posts
 
-    fun getPosts() {
+    fun getPosts(id: String) {
         viewModelScope.launch {
-            _posts.value = repository.getPostFeed()
+            _posts.value = repository.getUserPosts(id)
         }
     }
 

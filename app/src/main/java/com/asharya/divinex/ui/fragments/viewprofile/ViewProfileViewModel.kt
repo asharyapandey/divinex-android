@@ -48,13 +48,12 @@ class ViewProfileViewModel(private val userRepository: UserRepository, private v
         }
     }
 
-    fun deletePosts() {
+    fun deletePosts(id: String) {
         viewModelScope.launch {
-            postRepository.deleteUserPosts(userID)
+            postRepository.deleteUserPosts(id)
         }
     }
     override fun onCleared() {
         super.onCleared()
-        deletePosts()
     }
 }
