@@ -30,6 +30,7 @@ class ProfileFragment : Fragment() {
     private lateinit var tvFollowers: TextView
     private lateinit var tvFollowing: TextView
     private lateinit var tvPostNumber: TextView
+    private lateinit var tvUsernameHeading: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -48,6 +49,7 @@ class ProfileFragment : Fragment() {
         rvUserPosts = view.findViewById(R.id.rvUserPosts)
         tvFollowers = view.findViewById(R.id.tvFollowers)
         tvFollowing= view.findViewById(R.id.tvFollowing)
+        tvUsernameHeading= view.findViewById(R.id.tvUsernameHeading)
         tvPostNumber= view.findViewById(R.id.tvPostNumber)
 
         // for RV
@@ -64,6 +66,7 @@ class ProfileFragment : Fragment() {
 
         viewModel.user.observe(viewLifecycleOwner, Observer { user ->
             tvUsername.text = user.username
+            tvUsernameHeading.text = user.username
             if (user.profilePicture != null) {
                 var profileImagePath = ServiceBuilder.loadImagePath() + user.profilePicture
                 profileImagePath = profileImagePath.replace("\\", "/")
