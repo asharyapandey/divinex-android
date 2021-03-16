@@ -85,9 +85,16 @@ class PostRepository(private val postDAO: PostDAO) : ApiRequest() {
     }
 
     suspend fun deletePost(post: Post) {
-        postDAO.deletePost(post)
-        postAPI.deletePost(ServiceBuilder.token!!, post._id)
-
+        try {
+            val response = apiRequest {
+                postAPI.deletePost(ServiceBuilder.token!!, post._id)
+            }
+            if (response.success == true) {
+                postDAO.deletePost(post)
+            }
+        } catch (ex: Exception) {
+            Log.e("PostRepo", ex.toString())
+        }
     }
 
 }
