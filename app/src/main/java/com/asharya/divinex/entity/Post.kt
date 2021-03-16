@@ -4,11 +4,12 @@ import android.os.Parcel
 import android.os.Parcelable
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import org.jetbrains.annotations.NotNull
 
 @Entity
 data class Post(
     @PrimaryKey
-    var _id: String?,
+    var _id: String,
     var caption: String? = null,
     var image: String? = null,
     var userID: String? = null,
@@ -16,7 +17,7 @@ data class Post(
     var profilePicture: String? = null,
 ): Parcelable {
     constructor(parcel: Parcel) : this(
-        parcel.readString(),
+        parcel.readString().toString(),
         parcel.readString(),
         parcel.readString(),
         parcel.readString(),

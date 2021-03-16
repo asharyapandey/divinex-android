@@ -80,5 +80,9 @@
         android:id="@+id/editPostFragment"
         android:name="com.asharya.divinex.ui.fragments.editpost.EditPostFragment"
         android:label="fragment_edit_post"
-        tools:layout="@layout/fragment_edit_post" />
+        tools:layout="@layout/fragment_edit_post" >
+        <argument
+            android:name="post"
+            app:argType="com.asharya.divinex.entity.Post" />
+    </fragment>
 </navigation>

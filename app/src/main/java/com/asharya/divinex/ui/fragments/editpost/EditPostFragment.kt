@@ -16,9 +16,12 @@ import android.widget.*
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.navArgs
 import com.asharya.divinex.R
+import com.asharya.divinex.api.ServiceBuilder
 import com.asharya.divinex.db.DivinexDB
 import com.asharya.divinex.repository.PostRepository
+import com.bumptech.glide.Glide
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileOutputStream
@@ -30,6 +33,8 @@ class EditPostFragment : Fragment() {
     private lateinit var ivPostImage: ImageView
     private lateinit var etPostCaption: EditText
     private lateinit var btnUploadPost: Button
+
+    private val args by navArgs<EditPostFragmentArgs>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
     }
@@ -45,6 +50,13 @@ class EditPostFragment : Fragment() {
         etPostCaption = view.findViewById(R.id.etPostCaption)
         btnUploadPost = view.findViewById(R.id.btnUploadPost)
 
+        etPostCaption.setText(args.post.caption)
+
+        var pictureLink = ServiceBuilder.loadImagePath() + args.post.image
+        pictureLink = pictureLink.replace("\\", "/")
+
+        Glide.with(requireContext()).load(pictureLink).into(ivPostImage)
+
         // view model
         val postDao = context?.let { DivinexDB.getInstance(it).getPostDAO() }
         val repository = postDao?.let { PostRepository(it) }
@@ -59,7 +71,6 @@ class EditPostFragment : Fragment() {
             if (isPostAdded) {
                 Toast.makeText(context, "Post Added", Toast.LENGTH_SHORT).show()
             }
-
         })
 
         ivPostImage.setOnClickListener {

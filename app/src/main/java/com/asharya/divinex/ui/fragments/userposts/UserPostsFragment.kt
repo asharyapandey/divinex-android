@@ -9,6 +9,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.RecyclerView
 import com.asharya.divinex.R
@@ -58,15 +59,16 @@ class UserPostsFragment : Fragment(), NewsFeedAdapter.PostClickListener {
         popupMenu.setOnMenuItemClickListener { item ->
             when (item.itemId) {
                 R.id.menuDelete-> delete(post)
-                R.id.menuUpdate-> update()
+                R.id.menuUpdate-> update(post)
             }
             true
         }
         popupMenu.show()
     }
 
-    private fun update() {
-        TODO("Not yet implemented")
+    private fun update(post: Post) {
+        val action = UserPostsFragmentDirections.actionUserPostsFragmentToEditPostFragment(post)
+        findNavController().navigate(action)
     }
 
     private fun delete(post: Post) {
