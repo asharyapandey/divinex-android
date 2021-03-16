@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.asharya.divinex.entity.Post
 import com.asharya.divinex.repository.PostRepository
 import kotlinx.coroutines.launch
 
@@ -16,6 +17,12 @@ class HomeViewModel(private val repository: PostRepository): ViewModel() {
     fun getPosts() {
         viewModelScope.launch {
             _posts.value = repository.getPostFeed()
+        }
+    }
+
+    fun deletePost(post: Post) {
+        viewModelScope.launch {
+            repository.deletePost(post)
         }
     }
 

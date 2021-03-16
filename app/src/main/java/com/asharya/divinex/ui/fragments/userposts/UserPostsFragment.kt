@@ -96,8 +96,6 @@ class UserPostsFragment : Fragment(), NewsFeedAdapter.PostClickListener {
 
     }
 
-
-
     private fun refreshPost() {
         viewModel.getPosts(args.userID)
     }

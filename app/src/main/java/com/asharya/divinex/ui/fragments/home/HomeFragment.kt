@@ -65,4 +65,8 @@ class HomeFragment : Fragment(), NewsFeedAdapter.PostClickListener {
     private fun delete() {
         TODO("Not yet implemented")
     }
+
+    private fun refreshPost() {
+        viewModel.getPosts()
+    }
 }

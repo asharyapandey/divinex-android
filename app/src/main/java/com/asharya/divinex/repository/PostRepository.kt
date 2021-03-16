@@ -24,7 +24,7 @@ class PostRepository(private val postDAO: PostDAO) : ApiRequest() {
 
     suspend fun getPostFeed(): List<Post> {
         refreshPosts()
-        return postDAO.getAllPosts()
+        return postDAO.getAllPosts(ServiceBuilder.currentUser?._id!!)
     }
 
     private suspend fun refreshPosts() {

@@ -9,8 +9,8 @@ interface PostDAO {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun addPost(post: Post)
 
-    @Query("select * from Post")
-    suspend fun getAllPosts(): List<Post>
+    @Query("select * from Post where userID!=:id")
+    suspend fun getAllPosts(id: String): List<Post>
 
     @Query("select * from Post where _id=:id")
     suspend fun getPost(id: String) :Post
