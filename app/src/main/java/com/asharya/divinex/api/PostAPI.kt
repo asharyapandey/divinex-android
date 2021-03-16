@@ -3,6 +3,7 @@ package com.asharya.divinex.api
 import com.asharya.divinex.model.Post
 import com.asharya.divinex.response.AddPostResponse
 import com.asharya.divinex.response.PostsResponse
+import com.asharya.divinex.response.UpdateDeletePostResponse
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import retrofit2.Response
@@ -32,4 +33,10 @@ interface PostAPI {
         @Header("auth-token") token: String,
         @Path("id") id: String
     ): Response<PostsResponse>
+
+    @DELETE("post/{id}")
+    suspend fun deletePost(
+        @Header("auth-token") token: String,
+        @Path("id") id: String
+    ): Response<UpdateDeletePostResponse>
 }

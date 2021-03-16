@@ -5,15 +5,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.PopupMenu
+import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.NavArgs
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.RecyclerView
 import com.asharya.divinex.R
 import com.asharya.divinex.adapters.NewsFeedAdapter
-import com.asharya.divinex.api.ServiceBuilder
 import com.asharya.divinex.db.DivinexDB
 import com.asharya.divinex.entity.Post
 import com.asharya.divinex.repository.PostRepository
@@ -40,9 +39,11 @@ class UserPostsFragment : Fragment(), NewsFeedAdapter.PostClickListener {
         viewModel = ViewModelProvider(this, UserPostsViewModelFactory(repository!!)).get(UserPostsViewModel::class.java)
         rvFeedPosts = view.findViewById(R.id.rvFeedPosts)
 
+
+        refreshPost()
+
         adapter = context?.let { NewsFeedAdapter(it, this) }!!
         rvFeedPosts.adapter = adapter
-        viewModel.getPosts(args.userID)
 
         viewModel.posts.observe(viewLifecycleOwner, Observer { posts ->
             adapter.submitList(posts)
@@ -56,7 +57,7 @@ class UserPostsFragment : Fragment(), NewsFeedAdapter.PostClickListener {
         popupMenu.menuInflater.inflate(R.menu.update_delete, popupMenu.menu)
         popupMenu.setOnMenuItemClickListener { item ->
             when (item.itemId) {
-                R.id.menuDelete-> delete()
+                R.id.menuDelete-> delete(post)
                 R.id.menuUpdate-> update()
             }
             true
@@ -68,7 +69,36 @@ class UserPostsFragment : Fragment(), NewsFeedAdapter.PostClickListener {
         TODO("Not yet implemented")
     }
 
-    private fun delete() {
-        TODO("Not yet implemented")
+    private fun delete(post: Post) {
+
+        val builder = AlertDialog.Builder(requireContext())
+
+        val alertDialog = builder.apply {
+            setTitle("Delete this Post?")
+            setMessage("This post will be deleted forever and can't be restored.")
+            setIcon(R.drawable.ic_alert)
+
+            setPositiveButton("Yes") {_, _ ->
+                viewModel.deletePost(post)
+                refreshPost()
+            }
+
+            setNegativeButton("No") {_, _ ->
+
+            }
+
+                .create()
+        }
+
+        alertDialog.show()
+
+
+
+    }
+
+
+
+    private fun refreshPost() {
+        viewModel.getPosts(args.userID)
     }
 }
