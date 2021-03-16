@@ -90,6 +90,7 @@ class ViewProfileFragment : Fragment(), UserPostsAdapter.UserPostClickListener {
     }
 
     override fun itemClicked(post: Post, position: Int) {
-        TODO("Not yet implemented")
+        val action = ViewProfileFragmentDirections.actionViewProfileFragmentToUserPostsFragment(post.userID!!, position)
+        findNavController().navigate(action)
     }
 }

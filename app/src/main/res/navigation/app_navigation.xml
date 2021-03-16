@@ -55,6 +55,9 @@
             android:name="userID"
             app:argType="string"
             android:defaultValue='""' />
+        <action
+            android:id="@+id/action_viewProfileFragment_to_userPostsFragment"
+            app:destination="@id/userPostsFragment" />
     </fragment>
     <fragment
         android:id="@+id/userPostsFragment"
