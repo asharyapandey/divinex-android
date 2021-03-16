@@ -17,12 +17,13 @@ import com.asharya.divinex.R
 import com.asharya.divinex.adapters.UserPostsAdapter
 import com.asharya.divinex.api.ServiceBuilder
 import com.asharya.divinex.db.DivinexDB
+import com.asharya.divinex.entity.Post
 import com.asharya.divinex.repository.PostRepository
 import com.asharya.divinex.repository.UserRepository
 import com.bumptech.glide.Glide
 import de.hdodenhof.circleimageview.CircleImageView
 
-class ViewProfileFragment : Fragment() {
+class ViewProfileFragment : Fragment(), UserPostsAdapter.UserPostClickListener {
     private lateinit var civProfile: CircleImageView
     private lateinit var tvUsername : TextView
     private lateinit var viewModelView: ViewProfileViewModel
@@ -52,7 +53,7 @@ class ViewProfileFragment : Fragment() {
         tvPostNumber= view.findViewById(R.id.tvPostNumber)
 
         // for RV
-        val adapter = context?.let { UserPostsAdapter(it) }
+        val adapter = context?.let { UserPostsAdapter(it, this) }
         rvUserPosts.adapter = adapter
         rvUserPosts.layoutManager = GridLayoutManager(context, 3 )
 
@@ -86,5 +87,9 @@ class ViewProfileFragment : Fragment() {
     override fun onStop() {
         viewModelView.deletePosts(args.userID)
         super.onStop()
+    }
+
+    override fun itemClicked(post: Post, position: Int) {
+        TODO("Not yet implemented")
     }
 }

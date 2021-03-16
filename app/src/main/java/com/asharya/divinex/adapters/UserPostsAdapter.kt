@@ -12,13 +12,19 @@ import com.asharya.divinex.api.ServiceBuilder
 import com.asharya.divinex.entity.Post
 import com.bumptech.glide.Glide
 
-class UserPostsAdapter(val context: Context) : RecyclerView.Adapter<UserPostsAdapter.UserPostViewHolder>() {
+class UserPostsAdapter(val context: Context, val listener: UserPostClickListener) : RecyclerView.Adapter<UserPostsAdapter.UserPostViewHolder>() {
     private var postList = emptyList<Post>()
 
     inner class UserPostViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val ivProfilePosts: ImageView
         init {
             ivProfilePosts = itemView.findViewById(R.id.ivProfilePosts)
+
+            itemView.setOnClickListener {
+                val position = adapterPosition
+                if (position != RecyclerView.NO_POSITION)
+                    listener.itemClicked(postList[position], position)
+            }
         }
     }
 
@@ -70,4 +76,8 @@ class UserPostsAdapter(val context: Context) : RecyclerView.Adapter<UserPostsAda
     }
 
     override fun getItemCount() = postList.size
+
+    interface UserPostClickListener {
+        fun itemClicked(post: Post, position: Int)
+    }
 }

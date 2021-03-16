@@ -18,6 +18,9 @@
         <action
             android:id="@+id/action_profileFragment_to_mapsFragment"
             app:destination="@id/mapsFragment" />
+        <action
+            android:id="@+id/action_profileFragment_to_userPostsFragment"
+            app:destination="@id/userPostsFragment" />
     </fragment>
     <fragment
         android:id="@+id/homeFragment"
@@ -52,5 +55,19 @@
             android:name="userID"
             app:argType="string"
             android:defaultValue='""' />
+    </fragment>
+    <fragment
+        android:id="@+id/userPostsFragment"
+        android:name="com.asharya.divinex.ui.fragments.userposts.UserPostsFragment"
+        android:label="fragment_user_posts"
+        tools:layout="@layout/fragment_user_posts" >
+        <argument
+            android:name="userID"
+            app:argType="string"
+            android:defaultValue='""' />
+        <argument
+            android:name="position"
+            app:argType="integer"
+            android:defaultValue="1" />
     </fragment>
 </navigation>
