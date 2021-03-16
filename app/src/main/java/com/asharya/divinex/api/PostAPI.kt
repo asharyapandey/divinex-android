@@ -14,9 +14,9 @@ interface PostAPI {
     @POST("post")
     suspend fun addPost(
         @Header("auth-token") token: String,
-        @Part("caption") caption:RequestBody,
-        @Part  image: MultipartBody.Part
-    ) : Response<AddPostResponse>
+        @Part("caption") caption: RequestBody,
+        @Part image: MultipartBody.Part
+    ): Response<AddPostResponse>
 
     @GET("post/feed")
     suspend fun getPostFeed(
@@ -38,5 +38,14 @@ interface PostAPI {
     suspend fun deletePost(
         @Header("auth-token") token: String,
         @Path("id") id: String
+    ): Response<UpdateDeletePostResponse>
+
+    @Multipart
+    @PUT("post/{id}")
+    suspend fun updatePost(
+        @Header("auth-token") token: String,
+        @Path("id") id: String,
+        @Part("caption") caption: RequestBody,
+        @Part image: MultipartBody.Part
     ): Response<UpdateDeletePostResponse>
 }

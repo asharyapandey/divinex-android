@@ -4,7 +4,6 @@ import android.os.Parcel
 import android.os.Parcelable
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import org.jetbrains.annotations.NotNull
 
 @Entity
 data class Post(
@@ -26,13 +25,7 @@ data class Post(
     ) {
     }
 
-    override fun describeContents(): Int {
-        TODO("Not yet implemented")
-    }
 
-    override fun writeToParcel(dest: Parcel?, flags: Int) {
-        TODO("Not yet implemented")
-    }
 
     companion object CREATOR : Parcelable.Creator<Post> {
         override fun createFromParcel(parcel: Parcel): Post {
@@ -42,5 +35,17 @@ data class Post(
         override fun newArray(size: Int): Array<Post?> {
             return arrayOfNulls(size)
         }
+    }
+
+    override fun describeContents(): Int {
+        return 0
+    }
+
+    override fun writeToParcel(dest: Parcel?, flags: Int) {
+        dest?.writeString(_id)
+        dest?.writeString(profilePicture)
+        dest?.writeString(caption)
+        dest?.writeString(image)
+        dest?.writeString(userID)
     }
 }

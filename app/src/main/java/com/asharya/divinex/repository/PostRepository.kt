@@ -7,6 +7,7 @@ import com.asharya.divinex.api.ServiceBuilder
 import com.asharya.divinex.dao.PostDAO
 import com.asharya.divinex.entity.Post
 import com.asharya.divinex.response.AddPostResponse
+import com.asharya.divinex.response.UpdateDeletePostResponse
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import java.lang.Exception
@@ -18,6 +19,13 @@ class PostRepository(private val postDAO: PostDAO) : ApiRequest() {
     suspend fun addPost(caption: RequestBody, image: MultipartBody.Part): AddPostResponse {
         return apiRequest {
             postAPI.addPost(ServiceBuilder.token!!, caption, image)
+        }
+    }
+
+    // update post
+    suspend fun updatePost(caption: RequestBody, image: MultipartBody.Part, postID: String): UpdateDeletePostResponse{
+        return apiRequest {
+            postAPI.updatePost(ServiceBuilder.token!!,postID, caption, image)
         }
     }
 
@@ -95,5 +103,6 @@ class PostRepository(private val postDAO: PostDAO) : ApiRequest() {
             Log.e("PostRepo", ex.toString())
         }
     }
+
 
 }

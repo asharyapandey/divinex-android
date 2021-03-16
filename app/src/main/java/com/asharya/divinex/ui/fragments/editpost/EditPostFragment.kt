@@ -2,7 +2,6 @@ package com.asharya.divinex.ui.fragments.editpost
 
 import android.app.Activity
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.os.Bundle
@@ -13,7 +12,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
-import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.navArgs
@@ -44,7 +42,7 @@ class EditPostFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val view = inflater.inflate(R.layout.fragment_add_post, container, false)
+        val view = inflater.inflate(R.layout.fragment_edit_post, container, false)
 
         ivPostImage = view.findViewById(R.id.ivPostImage)
         etPostCaption = view.findViewById(R.id.etPostCaption)
@@ -67,9 +65,9 @@ class EditPostFragment : Fragment() {
 
 
         //
-        viewModel.postAdded.observe(viewLifecycleOwner, androidx.lifecycle.Observer{ isPostAdded ->
+        viewModel.postUpdated.observe(viewLifecycleOwner, androidx.lifecycle.Observer{ isPostAdded ->
             if (isPostAdded) {
-                Toast.makeText(context, "Post Added", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, "Post Updated", Toast.LENGTH_SHORT).show()
             }
         })
 
@@ -78,7 +76,7 @@ class EditPostFragment : Fragment() {
         }
         btnUploadPost.setOnClickListener {
             if (validate()) {
-                imageUrl?.let { it1 -> viewModel.addPost(etPostCaption.text.toString(), it1) }
+                imageUrl?.let { it1 -> viewModel.updatePost(etPostCaption.text.toString(), it1, args.post._id) }
             }
         }
         return view

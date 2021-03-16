@@ -8,10 +8,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.asharya.divinex.repository.PostRepository
 import kotlinx.coroutines.launch
-import okhttp3.MediaType
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.MultipartBody
-import okhttp3.RequestBody
 import okhttp3.RequestBody.Companion.asRequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
 import java.io.File
@@ -19,13 +17,13 @@ import java.lang.Exception
 
 class EditPostViewModel(private val repository: PostRepository): ViewModel() {
 
-    private val _postAdded = MutableLiveData<Boolean>()
-    val postAdded : LiveData<Boolean>
-    get() = _postAdded
+    private val _postUpdated = MutableLiveData<Boolean>()
+    val postUpdated : LiveData<Boolean>
+    get() = _postUpdated
     init {
     }
 
-    fun addPost(caption:String, image:String) {
+    fun updatePost(caption:String, image:String, postID: String) {
         viewModelScope.launch {
             val file = File(image)
             val extension = MimeTypeMap.getFileExtensionFromUrl(image)
@@ -35,11 +33,11 @@ class EditPostViewModel(private val repository: PostRepository): ViewModel() {
             val body = MultipartBody.Part.createFormData("image",file.name, reqFile)
             val reqCaption = caption.toRequestBody("text/plain".toMediaType())
             try {
-                val response = repository.addPost(reqCaption, body)
+                val response = repository.updatePost(reqCaption, body, postID)
                 if (response.success == true)
-                    _postAdded.value = true
+                    _postUpdated.value = true
             } catch (ex: Exception) {
-                _postAdded.value = false
+                _postUpdated.value = false
                 Log.i("AddPostViewModel", ex.toString())
             }
         }
@@ -47,6 +45,6 @@ class EditPostViewModel(private val repository: PostRepository): ViewModel() {
 
     override fun onCleared() {
         super.onCleared()
-        _postAdded.value = false
+        _postUpdated.value = false
     }
 }
