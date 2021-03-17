@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
 import android.widget.PopupMenu
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -54,6 +55,12 @@ class CommentFragment : Fragment(), CommentAdapter.OnCommentClick {
             adapter.submitList(comments)
         })
 
+        viewModel.commentAdded.observe(viewLifecycleOwner, Observer { commentAdded ->
+            if (commentAdded) {
+                Toast.makeText(context, "Comment was Added", Toast.LENGTH_SHORT).show()
+            }
+        })
+
 
         btnComment.setOnClickListener {
             if (TextUtils.isEmpty(etComment.text)) {
@@ -77,7 +84,8 @@ class CommentFragment : Fragment(), CommentAdapter.OnCommentClick {
     }
 
     private fun addComment(comment: String) {
-        TODO("Not yet implemented")
+        viewModel.addComment(args.postID, comment)
+        refreshComments()
     }
 
     override fun onIbActionsClick(comment: Comment, view: View) {

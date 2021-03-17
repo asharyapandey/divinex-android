@@ -48,6 +48,7 @@ class CommentAdapter(val context: Context, val listener: OnCommentClick) : Recyc
         holder.tvCommentUsername.text = comment.username
         holder.tvComment.text = comment.comment
 
+        // TODO : Make so that user can delete comment of their own post
         if (comment.userID != ServiceBuilder.currentUser?._id) {
             holder.ibActions.visibility = View.INVISIBLE
         }
