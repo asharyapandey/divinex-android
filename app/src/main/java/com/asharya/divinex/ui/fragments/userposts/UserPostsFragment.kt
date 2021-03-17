@@ -95,13 +95,9 @@ class UserPostsFragment : Fragment(), NewsFeedAdapter.PostClickListener {
             setNegativeButton("No") { _, _ ->
 
             }
-
                 .create()
         }
-
         alertDialog.show()
-
-
     }
 
     private fun refreshPost() {

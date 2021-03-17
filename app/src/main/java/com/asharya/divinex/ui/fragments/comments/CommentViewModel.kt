@@ -10,19 +10,24 @@ import com.asharya.divinex.repository.CommentRepository
 import kotlinx.coroutines.launch
 import java.lang.Exception
 
-class CommentViewModel(private val repository: CommentRepository): ViewModel() {
+class CommentViewModel(private val repository: CommentRepository) : ViewModel() {
 
-    private val _comments= MutableLiveData<List<Comment>>()
+    private val _comments = MutableLiveData<List<Comment>>()
     val comments: LiveData<List<Comment>>
-    get() = _comments
+        get() = _comments
 
     private val _commentAdded = MutableLiveData<Boolean>()
     val commentAdded: LiveData<Boolean>
-    get() = _commentAdded
+        get() = _commentAdded
 
     private val _commentUpdated = MutableLiveData<Boolean>()
-    val commentUpdated : LiveData<Boolean>
-        get() = _commentAdded
+    val commentUpdated: LiveData<Boolean>
+        get() = _commentUpdated
+
+    init {
+
+    }
+
     fun getPosts(id: String) {
         viewModelScope.launch {
             _comments.value = repository.getComments(id)
@@ -51,11 +56,16 @@ class CommentViewModel(private val repository: CommentRepository): ViewModel() {
                 if (response.success == true) {
                     _commentUpdated.value = true
                 }
-
             } catch (ex: Exception) {
                 _commentUpdated.value = false
                 Log.d("CommentViewModel", ex.toString())
             }
+        }
+    }
+
+    fun deleteComment(comment: Comment) {
+        viewModelScope.launch {
+            repository.deleteComment(comment)
         }
     }
 

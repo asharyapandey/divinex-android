@@ -55,18 +55,18 @@ class CommentRepository(private val commentDAO: CommentDAO) : ApiRequest() {
             Log.e("CommentRepo", ex.toString())
         }
     }
-//    suspend fun deletePost(post: Post) {
-//        try {
-//            val response = apiRequest {
-//                postAPI.deletePost(ServiceBuilder.token!!, post._id)
-//            }
-//            if (response.success == true) {
-//                postDAO.deletePost(post)
-//            }
-//        } catch (ex: Exception) {
-//            Log.e("PostRepo", ex.toString())
-//        }
-//    }
+    suspend fun deleteComment(comment: Comment) {
+        try {
+            val response = apiRequest {
+                postAPI.deleteComment(ServiceBuilder.token!!, comment._id)
+            }
+            if (response.success == true) {
+                commentDAO.deleteComment(comment)
+            }
+        } catch (ex: Exception) {
+            Log.e("PostRepo", ex.toString())
+        }
+    }
 
 
 }

@@ -69,5 +69,9 @@ interface PostAPI {
         @Body comment: Comment
     ): Response<AddCommentResponse>
 
-
+    @DELETE("post/comment/{id}")
+    suspend fun deleteComment(
+        @Header("auth-token") token: String,
+        @Path("id") id: String,
+    ): Response<AddCommentResponse>
 }

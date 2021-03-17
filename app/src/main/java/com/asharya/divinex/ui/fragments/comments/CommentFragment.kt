@@ -9,6 +9,7 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.PopupMenu
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -63,13 +64,11 @@ class CommentFragment : Fragment(), CommentAdapter.OnCommentClick {
                 Toast.makeText(context, "Comment was Added", Toast.LENGTH_SHORT).show()
             }
         })
-
-        viewModel.commentUpdated.observe(viewLifecycleOwner, Observer { commentUpdated ->
-            if (commentUpdated) {
-                reset()
-                Toast.makeText(context, "Comment was Updated", Toast.LENGTH_SHORT).show()
-            }
+        
+        viewModel.commentUpdated.observe(viewLifecycleOwner, Observer {
+            Toast.makeText(context, "$it", Toast.LENGTH_SHORT).show()
         })
+
 
         btnComment.setOnClickListener {
             if (TextUtils.isEmpty(etComment.text)) {
@@ -129,7 +128,25 @@ class CommentFragment : Fragment(), CommentAdapter.OnCommentClick {
     }
 
     private fun delete(comment: Comment) {
-        TODO("Not yet implemented")
+        val builder = AlertDialog.Builder(requireContext())
+
+        val alertDialog = builder.apply {
+            setTitle("Delete this Comment?")
+            setMessage("This Comment will be deleted forever and can't be restored.")
+            setIcon(R.drawable.ic_alert)
+
+            setPositiveButton("Yes") { _, _ ->
+                viewModel.deleteComment(comment)
+                refreshComments()
+                Toast.makeText(context, "Comment Deleted", Toast.LENGTH_SHORT).show()
+            }
+
+            setNegativeButton("No") { _, _ ->
+
+            }
+                .create()
+        }
+        alertDialog.show()
     }
 
     private fun refreshComments() {
