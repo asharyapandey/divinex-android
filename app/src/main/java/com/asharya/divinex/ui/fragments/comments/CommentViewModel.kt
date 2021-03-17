@@ -20,13 +20,16 @@ class CommentViewModel(private val repository: CommentRepository): ViewModel() {
     val commentAdded: LiveData<Boolean>
     get() = _commentAdded
 
+    private val _commentUpdated = MutableLiveData<Boolean>()
+    val commentUpdated : LiveData<Boolean>
+        get() = _commentAdded
     fun getPosts(id: String) {
         viewModelScope.launch {
             _comments.value = repository.getComments(id)
         }
     }
 
-    fun addComment(postID: String, comment: String) {
+    fun addComment(postID: String, comment: Comment) {
         viewModelScope.launch {
             try {
                 val response = repository.addComment(id = postID, comment = comment)
@@ -36,6 +39,21 @@ class CommentViewModel(private val repository: CommentRepository): ViewModel() {
 
             } catch (ex: Exception) {
                 _commentAdded.value = false
+                Log.d("CommentViewModel", ex.toString())
+            }
+        }
+    }
+
+    fun updateComment(postID: String, comment: Comment) {
+        viewModelScope.launch {
+            try {
+                val response = repository.updateComment(id = postID, comment = comment)
+                if (response.success == true) {
+                    _commentUpdated.value = true
+                }
+
+            } catch (ex: Exception) {
+                _commentUpdated.value = false
                 Log.d("CommentViewModel", ex.toString())
             }
         }

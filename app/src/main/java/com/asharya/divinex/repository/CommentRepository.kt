@@ -6,7 +6,6 @@ import com.asharya.divinex.api.PostAPI
 import com.asharya.divinex.api.ServiceBuilder
 import com.asharya.divinex.dao.CommentDAO
 import com.asharya.divinex.entity.Comment
-import com.asharya.divinex.entity.Post
 import com.asharya.divinex.response.AddCommentResponse
 import java.lang.Exception
 
@@ -14,15 +13,18 @@ class CommentRepository(private val commentDAO: CommentDAO) : ApiRequest() {
     private val postAPI = ServiceBuilder.buildService(PostAPI::class.java)
 
     // add comment
-    suspend fun addComment(comment: String, id: String): AddCommentResponse{
+    suspend fun addComment(comment: Comment, id: String): AddCommentResponse{
         return apiRequest {
             postAPI.addComment(ServiceBuilder.token!!,id, comment)
         }
     }
 
     // update post
-//    suspend fun updatePost(): UpdateDeletePostResponse{
-//    }
+    suspend fun updateComment(comment: Comment, id: String): AddCommentResponse{
+            return apiRequest {
+                postAPI.updateComment(ServiceBuilder.token!!, id, comment)
+            }
+    }
 
     suspend fun getComments(id: String): List<Comment> {
         refreshComments(id)

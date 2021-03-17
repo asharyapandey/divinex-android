@@ -26,6 +26,8 @@ class CommentFragment : Fragment(), CommentAdapter.OnCommentClick {
     private lateinit var btnComment: Button
     private lateinit var rvComment: RecyclerView
 
+    var currentComment: Comment = Comment("")
+
     private val args by navArgs<CommentFragmentArgs>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -57,36 +59,55 @@ class CommentFragment : Fragment(), CommentAdapter.OnCommentClick {
 
         viewModel.commentAdded.observe(viewLifecycleOwner, Observer { commentAdded ->
             if (commentAdded) {
+                reset()
                 Toast.makeText(context, "Comment was Added", Toast.LENGTH_SHORT).show()
             }
         })
 
+        viewModel.commentUpdated.observe(viewLifecycleOwner, Observer { commentUpdated ->
+            if (commentUpdated) {
+                reset()
+                Toast.makeText(context, "Comment was Updated", Toast.LENGTH_SHORT).show()
+            }
+        })
 
         btnComment.setOnClickListener {
             if (TextUtils.isEmpty(etComment.text)) {
                 etComment.error = "Please Add a Comment"
                 etComment.requestFocus()
+                return@setOnClickListener
             }
-            val comment = etComment.text.toString()
-            if (btnComment.text == "Comment") {
+            val comment = Comment(_id = "", comment = etComment.text.toString())
+
+            if (btnComment.text.toString() == "comment") {
                 addComment(comment)
             } else {
                 updateComment(comment)
             }
-
         }
 
         return view
     }
 
-    private fun updateComment(comment: String) {
-        TODO("Not yet implemented")
+    private fun updateComment(comment: Comment) {
+        if (currentComment._id != "") {
+            viewModel.updateComment(currentComment._id, comment)
+            refreshComments()
+        } else {
+            Toast.makeText(context, "Select a Comment", Toast.LENGTH_SHORT).show()
+        }
     }
 
-    private fun addComment(comment: String) {
+    private fun addComment(comment: Comment) {
         viewModel.addComment(args.postID, comment)
         refreshComments()
     }
+
+    private fun reset() {
+        etComment.setText("")
+        btnComment.text = "comment"
+    }
+
 
     override fun onIbActionsClick(comment: Comment, view: View) {
         val popupMenu = PopupMenu(context, view)
@@ -104,6 +125,7 @@ class CommentFragment : Fragment(), CommentAdapter.OnCommentClick {
     private fun update(comment: Comment) {
         etComment.setText(comment.comment)
         btnComment.text = "Update Comment"
+        currentComment = comment
     }
 
     private fun delete(comment: Comment) {

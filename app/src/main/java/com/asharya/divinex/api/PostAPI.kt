@@ -1,5 +1,6 @@
 package com.asharya.divinex.api
 
+import com.asharya.divinex.entity.Comment
 import com.asharya.divinex.model.Post
 import com.asharya.divinex.response.*
 import okhttp3.MultipartBody
@@ -52,7 +53,7 @@ interface PostAPI {
     suspend fun addComment(
         @Header("auth-token") token: String,
         @Path("id") id: String,
-        @Body comment: String
+        @Body comment: Comment
     ): Response<AddCommentResponse>
 
     @GET("post/comment/{id}")
@@ -61,7 +62,12 @@ interface PostAPI {
         @Path("id") id: String
     ): Response<CommentResponse>
 
-
+    @PUT("post/comment/{id}")
+    suspend fun updateComment(
+        @Header("auth-token") token: String,
+        @Path("id") id: String,
+        @Body comment: Comment
+    ): Response<AddCommentResponse>
 
 
 }
