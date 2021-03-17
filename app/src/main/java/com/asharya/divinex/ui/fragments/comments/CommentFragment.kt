@@ -61,12 +61,15 @@ class CommentFragment : Fragment(), CommentAdapter.OnCommentClick {
         viewModel.commentAdded.observe(viewLifecycleOwner, Observer { commentAdded ->
             if (commentAdded) {
                 reset()
-                Toast.makeText(context, "Comment was Added", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, "Comment Added", Toast.LENGTH_SHORT).show()
             }
         })
         
-        viewModel.commentUpdated.observe(viewLifecycleOwner, Observer {
-            Toast.makeText(context, "$it", Toast.LENGTH_SHORT).show()
+        viewModel.commentUpdated.observe(viewLifecycleOwner, Observer { isCommentUpdated ->
+            if (isCommentUpdated) {
+                reset()
+                Toast.makeText(context, "Comment Updated", Toast.LENGTH_SHORT).show()
+            }
         })
 
 
