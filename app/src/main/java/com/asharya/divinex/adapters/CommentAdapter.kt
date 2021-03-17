@@ -48,6 +48,10 @@ class CommentAdapter(val context: Context, val listener: OnCommentClick) : Recyc
         holder.tvCommentUsername.text = comment.username
         holder.tvComment.text = comment.comment
 
+        if (comment.userID != ServiceBuilder.currentUser?._id) {
+            holder.ibActions.visibility = View.INVISIBLE
+        }
+
         var profileImagePath = ServiceBuilder.loadImagePath()
         if (comment.profilePicture != null) {
             profileImagePath += comment.profilePicture ?: ""
