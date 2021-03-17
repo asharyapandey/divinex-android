@@ -26,7 +26,7 @@ class CommentRepository(private val commentDAO: CommentDAO) : ApiRequest() {
 
     suspend fun getComments(id: String): List<Comment> {
         refreshComments(id)
-        return commentDAO.getComments()
+        return commentDAO.getComments(id)
     }
 
     private suspend fun refreshComments(id: String) {

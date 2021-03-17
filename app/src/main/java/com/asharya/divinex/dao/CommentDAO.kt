@@ -10,8 +10,8 @@ interface CommentDAO {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun addComment(comment: Comment)
 
-    @Query("select * from Comment")
-    suspend fun getComments(): List<Comment>
+    @Query("select * from Comment where post=:id")
+    suspend fun getComments(id: String): List<Comment>
 
     @Delete
     suspend fun deleteComment(comment: Comment)
