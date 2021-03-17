@@ -1,6 +1,7 @@
 package com.asharya.divinex.ui.fragments.comments
 
 import android.os.Bundle
+import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -53,7 +54,30 @@ class CommentFragment : Fragment(), CommentAdapter.OnCommentClick {
             adapter.submitList(comments)
         })
 
+
+        btnComment.setOnClickListener {
+            if (TextUtils.isEmpty(etComment.text)) {
+                etComment.error = "Please Add a Comment"
+                etComment.requestFocus()
+            }
+            val comment = etComment.text.toString()
+            if (btnComment.text == "Comment") {
+                addComment(comment)
+            } else {
+                updateComment(comment)
+            }
+
+        }
+
         return view
+    }
+
+    private fun updateComment(comment: String) {
+        TODO("Not yet implemented")
+    }
+
+    private fun addComment(comment: String) {
+        TODO("Not yet implemented")
     }
 
     override fun onIbActionsClick(comment: Comment, view: View) {
@@ -70,7 +94,8 @@ class CommentFragment : Fragment(), CommentAdapter.OnCommentClick {
     }
 
     private fun update(comment: Comment) {
-        TODO("Not yet implemented")
+        etComment.setText(comment.comment)
+        btnComment.text = "Update Comment"
     }
 
     private fun delete(comment: Comment) {
