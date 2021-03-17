@@ -8,6 +8,7 @@ import android.widget.PopupMenu
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.asharya.divinex.R
 import com.asharya.divinex.adapters.NewsFeedAdapter
@@ -56,6 +57,11 @@ class HomeFragment : Fragment(), NewsFeedAdapter.PostClickListener {
             true
         }
         popupMenu.show()
+    }
+
+    override fun onViewCommentsClick(postID: String) {
+        val action = HomeFragmentDirections.actionHomeFragmentToCommentFragment(postID)
+        findNavController().navigate(action)
     }
 
     private fun update() {

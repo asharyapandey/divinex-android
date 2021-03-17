@@ -119,7 +119,7 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="4dp"
         android:fontFamily="@font/montserrat"
-        android:text="View all comments"
+        android:text="View comments"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tvProfileNameCaption" />
 
