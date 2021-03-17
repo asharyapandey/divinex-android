@@ -11,14 +11,18 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.navArgs
+import androidx.recyclerview.widget.RecyclerView
 import com.asharya.divinex.R
+import com.asharya.divinex.adapters.CommentAdapter
 import com.asharya.divinex.db.DivinexDB
+import com.asharya.divinex.entity.Comment
 import com.asharya.divinex.repository.CommentRepository
 
-class CommentFragment : Fragment() {
+class CommentFragment : Fragment(), CommentAdapter.OnCommentClick {
     private lateinit var viewModel: CommentViewModel
     private lateinit var etComment: EditText
     private lateinit var btnComment: Button
+    private lateinit var rvComment: RecyclerView
 
     private val args by navArgs<CommentFragmentArgs>()
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -34,6 +38,7 @@ class CommentFragment : Fragment() {
 
         etComment = view.findViewById(R.id.etComment)
         btnComment = view.findViewById(R.id.btnComment)
+        rvComment = view.findViewById(R.id.rvComments)
 
         val commentDao = DivinexDB.getInstance(requireContext()).getCommentDAO()
         val repository = CommentRepository(commentDao)
@@ -41,33 +46,34 @@ class CommentFragment : Fragment() {
 
         refreshComments()
 
+        val adapter = CommentAdapter(requireContext(), this)
+        rvComment.adapter = adapter
+
         viewModel.comments.observe(viewLifecycleOwner, Observer { comments ->
-
+            adapter.submitList(comments)
         })
-
-
 
         return view
     }
 
-    fun onIbMoreClick(view: View) {
+    override fun onIbActionsClick(comment: Comment, view: View) {
         val popupMenu = PopupMenu(context, view)
         popupMenu.menuInflater.inflate(R.menu.update_delete, popupMenu.menu)
         popupMenu.setOnMenuItemClickListener { item ->
             when (item.itemId) {
-                R.id.menuDelete-> delete()
-                R.id.menuUpdate-> update()
+                R.id.menuDelete-> delete(comment)
+                R.id.menuUpdate-> update(comment)
             }
             true
         }
         popupMenu.show()
     }
 
-    private fun update() {
+    private fun update(comment: Comment) {
         TODO("Not yet implemented")
     }
 
-    private fun delete() {
+    private fun delete(comment: Comment) {
         TODO("Not yet implemented")
     }
 

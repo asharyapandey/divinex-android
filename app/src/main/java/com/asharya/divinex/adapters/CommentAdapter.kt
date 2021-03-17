@@ -14,7 +14,7 @@ import com.asharya.divinex.entity.Comment
 import com.bumptech.glide.Glide
 import de.hdodenhof.circleimageview.CircleImageView
 
-class CommentAdapter(val context: Context, val listener: OnItemClick) : RecyclerView.Adapter<CommentAdapter.CommentViewHolder>() {
+class CommentAdapter(val context: Context, val listener: OnCommentClick) : RecyclerView.Adapter<CommentAdapter.CommentViewHolder>() {
     private var commentList = emptyList<Comment>()
 
     inner class CommentViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -60,7 +60,7 @@ class CommentAdapter(val context: Context, val listener: OnItemClick) : Recycler
 
     override fun getItemCount() = commentList.size
 
-    interface OnItemClick {
+    interface OnCommentClick {
         fun onIbActionsClick(comment: Comment, view: View)
     }
 
