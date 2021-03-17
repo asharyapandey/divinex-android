@@ -37,7 +37,10 @@ class UserPostsFragment : Fragment(), NewsFeedAdapter.PostClickListener {
         val view = inflater.inflate(R.layout.fragment_user_posts, container, false)
         val postDao = context?.let { DivinexDB.getInstance(it).getPostDAO() }
         val repository = postDao?.let { PostRepository(it) }
-        viewModel = ViewModelProvider(this, UserPostsViewModelFactory(repository!!)).get(UserPostsViewModel::class.java)
+        viewModel = ViewModelProvider(
+            this,
+            UserPostsViewModelFactory(repository!!)
+        ).get(UserPostsViewModel::class.java)
         rvFeedPosts = view.findViewById(R.id.rvFeedPosts)
 
 
@@ -58,12 +61,17 @@ class UserPostsFragment : Fragment(), NewsFeedAdapter.PostClickListener {
         popupMenu.menuInflater.inflate(R.menu.update_delete, popupMenu.menu)
         popupMenu.setOnMenuItemClickListener { item ->
             when (item.itemId) {
-                R.id.menuDelete-> delete(post)
-                R.id.menuUpdate-> update(post)
+                R.id.menuDelete -> delete(post)
+                R.id.menuUpdate -> update(post)
             }
             true
         }
         popupMenu.show()
+    }
+
+    override fun onViewCommentsClick(postID: String) {
+        val action = UserPostsFragmentDirections.actionUserPostsFragmentToCommentFragment(postID)
+        findNavController().navigate(action)
     }
 
     private fun update(post: Post) {
@@ -72,7 +80,6 @@ class UserPostsFragment : Fragment(), NewsFeedAdapter.PostClickListener {
     }
 
     private fun delete(post: Post) {
-
         val builder = AlertDialog.Builder(requireContext())
 
         val alertDialog = builder.apply {
@@ -80,22 +87,17 @@ class UserPostsFragment : Fragment(), NewsFeedAdapter.PostClickListener {
             setMessage("This post will be deleted forever and can't be restored.")
             setIcon(R.drawable.ic_alert)
 
-            setPositiveButton("Yes") {_, _ ->
+            setPositiveButton("Yes") { _, _ ->
                 viewModel.deletePost(post)
                 refreshPost()
             }
 
-            setNegativeButton("No") {_, _ ->
+            setNegativeButton("No") { _, _ ->
 
             }
-
                 .create()
         }
-
         alertDialog.show()
-
-
-
     }
 
     private fun refreshPost() {

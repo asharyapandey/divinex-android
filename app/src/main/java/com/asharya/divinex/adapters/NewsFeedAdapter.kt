@@ -27,6 +27,8 @@ class NewsFeedAdapter(val context: Context, val listenerPost: PostClickListener)
         val tvCaption : TextView
         val ibMore: ImageButton
 
+        val tvViewComments: TextView
+
         init {
             imgCardProfile = itemView.findViewById(R.id.imgCardProfile)
             tvProfileName = itemView.findViewById(R.id.tvProfileName)
@@ -34,11 +36,18 @@ class NewsFeedAdapter(val context: Context, val listenerPost: PostClickListener)
             ivPhoto = itemView.findViewById(R.id.ivPhoto)
             tvCaption = itemView.findViewById(R.id.tvCaption)
             ibMore = itemView.findViewById(R.id.ibMore)
+            tvViewComments = itemView.findViewById(R.id.tvViewComments)
 
             ibMore.setOnClickListener {
                 val position = adapterPosition
                 if (position != RecyclerView.NO_POSITION)
                 listenerPost.onIbMoreClick(postList[position], it)
+            }
+
+            tvViewComments.setOnClickListener {
+                val position = adapterPosition
+                if (position != RecyclerView.NO_POSITION)
+                    listenerPost.onViewCommentsClick(postList[position]._id)
             }
         }
     }
@@ -110,5 +119,6 @@ class NewsFeedAdapter(val context: Context, val listenerPost: PostClickListener)
 
     interface PostClickListener {
         fun onIbMoreClick(post: Post, view: View)
+        fun onViewCommentsClick(postID: String)
     }
 }

@@ -20,6 +20,7 @@ class EditPostViewModel(private val repository: PostRepository): ViewModel() {
     private val _postUpdated = MutableLiveData<Boolean>()
     val postUpdated : LiveData<Boolean>
     get() = _postUpdated
+
     init {
     }
 
