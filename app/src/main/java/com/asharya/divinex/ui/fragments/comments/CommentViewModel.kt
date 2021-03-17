@@ -1,28 +1,43 @@
 package com.asharya.divinex.ui.fragments.comments
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.asharya.divinex.entity.Post
-import com.asharya.divinex.repository.PostRepository
+import com.asharya.divinex.entity.Comment
+import com.asharya.divinex.repository.CommentRepository
 import kotlinx.coroutines.launch
+import java.lang.Exception
 
-class CommentViewModel(private val repository: PostRepository): ViewModel() {
+class CommentViewModel(private val repository: CommentRepository): ViewModel() {
 
-    private val _posts= MutableLiveData<List<com.asharya.divinex.entity.Post>>()
-    val posts: LiveData<List<com.asharya.divinex.entity.Post>>
-    get() = _posts
+    private val _comments= MutableLiveData<List<Comment>>()
+    val comments: LiveData<List<Comment>>
+    get() = _comments
 
-    fun getPosts() {
+    private val _commentAdded = MutableLiveData<Boolean>()
+    val commentAdded: LiveData<Boolean>
+    get() = _commentAdded
+
+    fun getPosts(id: String) {
         viewModelScope.launch {
-            _posts.value = repository.getPostFeed()
+            _comments.value = repository.getComments(id)
         }
     }
 
-    fun deletePost(post: Post) {
+    fun addComment(postID: String, comment: String) {
         viewModelScope.launch {
-            repository.deletePost(post)
+            try {
+                val response = repository.addComment(id = postID, comment = comment)
+                if (response.success == true) {
+                    _commentAdded.value = true
+                }
+
+            } catch (ex: Exception) {
+                _commentAdded.value = false
+                Log.d("CommentViewModel", ex.toString())
+            }
         }
     }
 

@@ -1,9 +1,7 @@
 package com.asharya.divinex.api
 
 import com.asharya.divinex.model.Post
-import com.asharya.divinex.response.AddPostResponse
-import com.asharya.divinex.response.PostsResponse
-import com.asharya.divinex.response.UpdateDeletePostResponse
+import com.asharya.divinex.response.*
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import retrofit2.Response
@@ -48,4 +46,22 @@ interface PostAPI {
         @Part("caption") caption: RequestBody,
         @Part image: MultipartBody.Part
     ): Response<UpdateDeletePostResponse>
+
+
+    @POST("post/comment/{id}")
+    suspend fun addComment(
+        @Header("auth-token") token: String,
+        @Path("id") id: String,
+        @Body comment: String
+    ): Response<AddCommentResponse>
+
+    @GET("post/comment/{id}")
+    suspend fun getComments(
+        @Header("auth-token") token: String,
+        @Path("id") id: String
+    ): Response<CommentResponse>
+
+
+
+
 }
