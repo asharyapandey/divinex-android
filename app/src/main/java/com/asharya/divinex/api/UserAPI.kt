@@ -39,4 +39,10 @@ interface UserAPI {
         @Header("auth-token") token: String,
         @Query("term") term: String
     ) : Response<SearchResponse>
+
+    @POST("user/follow/{id}")
+    suspend fun followUser(
+        @Header("auth-token") token: String,
+        @Path("id") id: String
+    ) : Response<LoginResponse>
 }

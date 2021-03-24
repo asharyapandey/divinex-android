@@ -51,4 +51,17 @@ class UserRepository : ApiRequest() {
         return emptyList()
     }
 
+    suspend fun followUser(id: String) : Boolean {
+        try {
+            val response = apiRequest {
+                userApi.followUser(ServiceBuilder.token!!, id)
+            }
+            if (response.success == true) return response.success!!
+            return false
+        } catch (ex: Exception) {
+            return false
+            Log.d("UserRepo", ex.toString())
+        }
+    }
+
 }

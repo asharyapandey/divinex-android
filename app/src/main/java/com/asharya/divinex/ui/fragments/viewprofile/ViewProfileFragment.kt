@@ -26,7 +26,7 @@ import de.hdodenhof.circleimageview.CircleImageView
 
 class ViewProfileFragment : Fragment(), UserPostsAdapter.UserPostClickListener {
     private lateinit var civProfile: CircleImageView
-    private lateinit var tvUsername : TextView
+    private lateinit var tvUsername: TextView
     private lateinit var viewModelView: ViewProfileViewModel
     private lateinit var rvUserPosts: RecyclerView
     private lateinit var tvFollowers: TextView
@@ -51,22 +51,30 @@ class ViewProfileFragment : Fragment(), UserPostsAdapter.UserPostClickListener {
         tvUsername = view.findViewById(R.id.tvUsername)
         rvUserPosts = view.findViewById(R.id.rvUserPosts)
         tvFollowers = view.findViewById(R.id.tvFollowers)
-        tvFollowing= view.findViewById(R.id.tvFollowing)
-        tvPostNumber= view.findViewById(R.id.tvPostNumber)
+        tvFollowing = view.findViewById(R.id.tvFollowing)
+        tvPostNumber = view.findViewById(R.id.tvPostNumber)
         btnFollowUnfollow = view.findViewById(R.id.btnFollowUnfollow)
 
         // for showing follow or unfollow
-        val currentUserFollowing = ServiceBuilder.currentUser?.following
-        if ()
+        val currentUserFollowings = ServiceBuilder.currentUser?.following
+
+//        for (user in currentUserFollowings!!) {
+//            if (user.== args.userID)
+//                btnFollowUnfollow.text = "Unfollow"
+//        }
+
         // for RV
         val adapter = context?.let { UserPostsAdapter(it, this) }
         rvUserPosts.adapter = adapter
-        rvUserPosts.layoutManager = GridLayoutManager(context, 3 )
+        rvUserPosts.layoutManager = GridLayoutManager(context, 3)
 
         val repository = UserRepository()
         val postDao = context?.let { DivinexDB.getInstance(it).getPostDAO() }
         val postRepository = postDao?.let { PostRepository(it) }
-        viewModelView = ViewModelProvider(this, ViewProfileViewModelFactory(repository, postRepository!!)).get(ViewProfileViewModel::class.java)
+        viewModelView =
+            ViewModelProvider(this, ViewProfileViewModelFactory(repository, postRepository!!)).get(
+                ViewProfileViewModel::class.java
+            )
         viewModelView.userID = args.userID
         viewModelView.getCurrentUser(args.userID)
         viewModelView.getCurrentUserPosts(args.userID)
@@ -81,7 +89,7 @@ class ViewProfileFragment : Fragment(), UserPostsAdapter.UserPostClickListener {
             tvFollowers.text = user.followers?.size.toString()
             tvFollowing.text = user.following?.size.toString()
 
-            if (currentUserFollowing!!.contains(user)) {
+            if (currentUserFollowings!!.contains(user)) {
                 btnFollowUnfollow.text = "Unfollow"
             }
         })
@@ -90,9 +98,20 @@ class ViewProfileFragment : Fragment(), UserPostsAdapter.UserPostClickListener {
             adapter?.submitList(posts)
             tvPostNumber.text = posts.size.toString()
         })
-        
-        btnFollowUnfollow.setOnClickListener { 
-            if (btnFollowUnfollow.text != "Follow") {
+        viewModelView.followed.observe(viewLifecycleOwner, Observer { isFollowed ->
+            if (isFollowed)
+                btnFollowUnfollow.text = "unfollow"
+        })
+
+        viewModelView.unfollowed.observe(viewLifecycleOwner, Observer { isUnFollowed ->
+            if (isUnFollowed)
+                btnFollowUnfollow.text = "follow"
+        })
+        btnFollowUnfollow.setOnClickListener {
+            if (btnFollowUnfollow.text != "follow") {
+                viewModelView.followUser(args.userID)
+            } else {
+
                 Toast.makeText(context, "Followxa", Toast.LENGTH_SHORT).show()
             }
         }
@@ -106,7 +125,10 @@ class ViewProfileFragment : Fragment(), UserPostsAdapter.UserPostClickListener {
     }
 
     override fun itemClicked(post: Post, position: Int) {
-        val action = ViewProfileFragmentDirections.actionViewProfileFragmentToUserPostsFragment(post.userID!!, position)
+        val action = ViewProfileFragmentDirections.actionViewProfileFragmentToUserPostsFragment(
+            post.userID!!,
+            position
+        )
         findNavController().navigate(action)
     }
 }
