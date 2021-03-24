@@ -56,7 +56,10 @@ class UserRepository : ApiRequest() {
             val response = apiRequest {
                 userApi.followUser(ServiceBuilder.token!!, id)
             }
-            if (response.success == true) return response.success!!
+            if (response.success == true) {
+                ServiceBuilder.currentUser = response.user
+                return response.success!!
+            }
             return false
         } catch (ex: Exception) {
             return false
@@ -69,7 +72,10 @@ class UserRepository : ApiRequest() {
             val response = apiRequest {
                 userApi.unFollowUser(ServiceBuilder.token!!, id)
             }
-            if (response.success == true) return response.success!!
+            if (response.success == true) {
+                ServiceBuilder.currentUser = response.user
+                return response.success!!
+            }
             return false
         } catch (ex: Exception) {
             return false
