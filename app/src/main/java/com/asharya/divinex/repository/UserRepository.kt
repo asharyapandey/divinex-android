@@ -64,4 +64,17 @@ class UserRepository : ApiRequest() {
         }
     }
 
+    suspend fun unFollowUser(id: String): Boolean {
+        try {
+            val response = apiRequest {
+                userApi.unFollowUser(ServiceBuilder.token!!, id)
+            }
+            if (response.success == true) return response.success!!
+            return false
+        } catch (ex: Exception) {
+            return false
+            Log.d("UserRepo", ex.toString())
+        }
+    }
+
 }

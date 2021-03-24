@@ -64,6 +64,13 @@ class ViewProfileViewModel(private val userRepository: UserRepository, private v
             _followed.value = userRepository.followUser(id)
         }
     }
+
+    fun unFollowUser(id: String) {
+        viewModelScope.launch {
+            _unfollowed.value = userRepository.unFollowUser(id)
+        }
+    }
+
     fun deletePosts(id: String) {
         viewModelScope.launch {
             postRepository.deleteUserPosts(id)

@@ -45,4 +45,10 @@ interface UserAPI {
         @Header("auth-token") token: String,
         @Path("id") id: String
     ) : Response<LoginResponse>
+
+    @DELETE("user/unfollow/{id}")
+    suspend fun unFollowUser(
+        @Header("auth-token") token: String,
+        @Path("id") id: String
+    ) : Response<LoginResponse>
 }
