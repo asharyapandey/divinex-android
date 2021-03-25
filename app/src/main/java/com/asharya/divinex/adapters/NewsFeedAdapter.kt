@@ -49,6 +49,17 @@ class NewsFeedAdapter(val context: Context, val listenerPost: PostClickListener)
                 if (position != RecyclerView.NO_POSITION)
                     listenerPost.onViewCommentsClick(postList[position]._id)
             }
+            tvProfileName.setOnClickListener {
+                val position = adapterPosition
+                if (position != RecyclerView.NO_POSITION)
+                    listenerPost.onUsernameClick(postList[position].userID!!)
+            }
+
+            tvProfileNameCaption.setOnClickListener {
+                val position = adapterPosition
+                if (position != RecyclerView.NO_POSITION)
+                    listenerPost.onUsernameClick(postList[position].userID!!)
+            }
         }
     }
 
@@ -120,5 +131,6 @@ class NewsFeedAdapter(val context: Context, val listenerPost: PostClickListener)
     interface PostClickListener {
         fun onIbMoreClick(post: Post, view: View)
         fun onViewCommentsClick(postID: String)
+        fun onUsernameClick(userID: String)
     }
 }

@@ -64,6 +64,11 @@ class HomeFragment : Fragment(), NewsFeedAdapter.PostClickListener {
         findNavController().navigate(action)
     }
 
+    override fun onUsernameClick(userID: String) {
+        val action = HomeFragmentDirections.actionHomeFragmentToViewProfileFragment(userID)
+        findNavController().navigate(action)
+    }
+
     private fun update() {
         TODO("Not yet implemented")
     }
