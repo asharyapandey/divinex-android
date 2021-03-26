@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.PopupMenu
+import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -72,6 +73,10 @@ class UserPostsFragment : Fragment(), NewsFeedAdapter.PostClickListener {
     override fun onViewCommentsClick(postID: String) {
         val action = UserPostsFragmentDirections.actionUserPostsFragmentToCommentFragment(postID)
         findNavController().navigate(action)
+    }
+
+    override fun onUsernameClick(userID: String) {
+        Toast.makeText(context, "Currently Viewing Your post", Toast.LENGTH_SHORT).show()
     }
 
     private fun update(post: Post) {

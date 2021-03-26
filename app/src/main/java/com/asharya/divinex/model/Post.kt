@@ -8,6 +8,7 @@ data class Post(
     var caption: String? = null,
     var image: String? = null,
     var user: User? = null,
+    var createdAt: String? = null
 )
 // TODO : Figure out how to handle likes
 

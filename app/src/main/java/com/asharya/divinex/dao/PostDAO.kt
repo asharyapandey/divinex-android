@@ -9,7 +9,7 @@ interface PostDAO {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun addPost(post: Post)
 
-    @Query("select * from Post where userID!=:id")
+    @Query("select * from Post where userID!=:id ORDER BY datetime(createdAt) DESC")
     suspend fun getAllPosts(id: String): List<Post>
 
     @Query("select * from Post where _id=:id")
