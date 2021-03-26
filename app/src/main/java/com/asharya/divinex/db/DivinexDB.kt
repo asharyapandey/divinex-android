@@ -4,17 +4,20 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import androidx.room.TypeConverters
 import com.asharya.divinex.dao.CommentDAO
 import com.asharya.divinex.dao.PostDAO
 import com.asharya.divinex.entity.Comment
 import com.asharya.divinex.entity.Post
 import com.asharya.divinex.entity.UserPost
 import com.asharya.divinex.model.User
+import com.asharya.divinex.utils.TimeStampConverter
 
 @Database(
     entities = [(Post::class), (Comment::class)],
     version = 1
 )
+@TypeConverters(TimeStampConverter::class)
 abstract class DivinexDB : RoomDatabase() {
 
     abstract fun getPostDAO() : PostDAO

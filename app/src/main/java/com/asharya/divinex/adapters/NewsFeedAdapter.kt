@@ -14,6 +14,9 @@ import com.asharya.divinex.api.ServiceBuilder
 import com.asharya.divinex.entity.Post
 import com.bumptech.glide.Glide
 import de.hdodenhof.circleimageview.CircleImageView
+import java.time.Duration
+import java.time.OffsetDateTime
+import java.time.temporal.ChronoUnit
 
 class NewsFeedAdapter(val context: Context, val listenerPost: PostClickListener) : RecyclerView.Adapter<NewsFeedAdapter.NewsFeedViewHolder>() {
     private var postList = emptyList<Post>()
@@ -28,6 +31,7 @@ class NewsFeedAdapter(val context: Context, val listenerPost: PostClickListener)
         val ibMore: ImageButton
 
         val tvViewComments: TextView
+        val tvTime: TextView
 
         init {
             imgCardProfile = itemView.findViewById(R.id.imgCardProfile)
@@ -37,6 +41,7 @@ class NewsFeedAdapter(val context: Context, val listenerPost: PostClickListener)
             tvCaption = itemView.findViewById(R.id.tvCaption)
             ibMore = itemView.findViewById(R.id.ibMore)
             tvViewComments = itemView.findViewById(R.id.tvViewComments)
+            tvTime = itemView.findViewById(R.id.tvTime)
 
             ibMore.setOnClickListener {
                 val position = adapterPosition
@@ -74,8 +79,11 @@ class NewsFeedAdapter(val context: Context, val listenerPost: PostClickListener)
         holder.tvCaption.text = post.caption
         holder.tvProfileName.text = post.username ?: ""
         holder.tvProfileNameCaption.text = post.username ?: ""
+        val now = OffsetDateTime.now()
+        val blah = post.createdAt?.until(now, ChronoUnit.HOURS)
 
-        if (post.userID != ServiceBuilder.currentUser?._id) {
+        holder.tvTime.text = blah.toString() + " Hours Ago"
+            if (post.userID != ServiceBuilder.currentUser?._id) {
            holder.ibMore.visibility = View.INVISIBLE
         }
 

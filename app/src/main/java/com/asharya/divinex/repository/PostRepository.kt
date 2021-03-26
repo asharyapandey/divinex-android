@@ -11,6 +11,9 @@ import com.asharya.divinex.response.UpdateDeletePostResponse
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import java.lang.Exception
+import java.time.LocalDateTime
+import java.time.OffsetDateTime
+import java.util.*
 
 class PostRepository(private val postDAO: PostDAO) : ApiRequest() {
     private val postAPI = ServiceBuilder.buildService(PostAPI::class.java)
@@ -40,7 +43,8 @@ class PostRepository(private val postDAO: PostDAO) : ApiRequest() {
                 postAPI.getPostFeed(ServiceBuilder.token!!)
             }
             if (response.success == true) {
-                for (post in response.posts!!)
+                for (post in response.posts!!) {
+                    val date = OffsetDateTime.parse(post.createdAt)
                     postDAO.addPost(
                         Post(
                             _id = post._id,
@@ -48,9 +52,11 @@ class PostRepository(private val postDAO: PostDAO) : ApiRequest() {
                             image = post.image,
                             userID = post.user?._id,
                             username = post.user?.username,
-                            profilePicture = post.user?.profilePicture
+                            profilePicture = post.user?.profilePicture,
+                            createdAt = date
                         )
                     )
+                }
             }
 
         } catch (ex: Exception) {
@@ -69,7 +75,8 @@ class PostRepository(private val postDAO: PostDAO) : ApiRequest() {
                 postAPI.getUsersPostById(ServiceBuilder.token!!, id)
             }
             if (response.success == true) {
-                for (post in response.posts!!)
+                for (post in response.posts!!) {
+                    val date = OffsetDateTime.parse(post.createdAt)
                     postDAO.addPost(
                         Post(
                             _id = post._id,
@@ -77,9 +84,11 @@ class PostRepository(private val postDAO: PostDAO) : ApiRequest() {
                             image = post.image,
                             userID = post.user?._id,
                             username = post.user?.username,
-                            profilePicture = post.user?.profilePicture
+                            profilePicture = post.user?.profilePicture,
+                            createdAt = date
                         )
                     )
+                }
             }
 
         } catch (ex: Exception) {
