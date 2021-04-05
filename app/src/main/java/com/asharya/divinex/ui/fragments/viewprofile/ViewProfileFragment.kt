@@ -101,14 +101,16 @@ class ViewProfileFragment : Fragment(), UserPostsAdapter.UserPostClickListener {
         viewModelView.followed.observe(viewLifecycleOwner, Observer { isFollowed ->
             if (isFollowed)
                 btnFollowUnfollow.text = "Unfollow"
+            viewModelView.getCurrentUser(args.userID)
+
         })
 
         viewModelView.unfollowed.observe(viewLifecycleOwner, Observer { isUnFollowed ->
             if (isUnFollowed)
                 btnFollowUnfollow.text = "Follow"
+            viewModelView.getCurrentUser(args.userID)
         })
         btnFollowUnfollow.setOnClickListener {
-            Toast.makeText(context, btnFollowUnfollow.text.toString(), Toast.LENGTH_SHORT).show()
             if (btnFollowUnfollow.text.toString() == "Follow") {
                 viewModelView.followUser(args.userID)
             } else {
