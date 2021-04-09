@@ -1,4 +1,4 @@
-package com.asharya.divinex.ui
+package com.asharya.divinex.ui.splash
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
@@ -8,6 +8,8 @@ import com.asharya.divinex.R
 import com.asharya.divinex.api.ServiceBuilder
 import com.asharya.divinex.db.DivinexDB
 import com.asharya.divinex.repository.UserRepository
+import com.asharya.divinex.ui.DashboardActivity
+import com.asharya.divinex.ui.login.LoginActivity
 import kotlinx.coroutines.*
 import java.lang.Exception
 

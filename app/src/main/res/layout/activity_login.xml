@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:id="@+id/clLogin"
     android:padding="16dp"
-    tools:context=".ui.LoginActivity">
+    tools:context=".ui.login.LoginActivity">
 
     <TextView
         android:id="@+id/tvEditUsername"

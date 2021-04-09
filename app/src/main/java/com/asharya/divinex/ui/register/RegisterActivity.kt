@@ -1,4 +1,4 @@
-package com.asharya.divinex.ui
+package com.asharya.divinex.ui.register
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
@@ -9,6 +9,7 @@ import com.asharya.divinex.R
 import com.asharya.divinex.db.DivinexDB
 import com.asharya.divinex.model.User
 import com.asharya.divinex.repository.UserRepository
+import com.asharya.divinex.ui.login.LoginActivity
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
