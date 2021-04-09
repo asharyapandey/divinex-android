@@ -10,6 +10,8 @@ import com.asharya.divinex.model.User
 import com.asharya.divinex.response.LoginResponse
 import com.asharya.divinex.response.SearchResponse
 import com.asharya.divinex.response.UserResponse
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
 import java.lang.Exception
 
 class UserRepository(private val userDAO: UserDAO) : ApiRequest() {
@@ -115,6 +117,17 @@ class UserRepository(private val userDAO: UserDAO) : ApiRequest() {
         } catch (ex: Exception) {
             return false
             Log.d("UserRepo", ex.toString())
+        }
+    }
+
+    suspend fun updateProfileWithImage(image: MultipartBody.Part, userID: String, email: RequestBody, gender: RequestBody) : UserResponse {
+        return apiRequest {
+            userApi.updateProfile(ServiceBuilder.token!!, userID, email, gender, image)
+        }
+    }
+    suspend fun updateProfile(userID: String,email: String, gender: String) : UserResponse {
+        return apiRequest {
+            userApi.updateProfile(ServiceBuilder.token!!, userID, email, gender)
         }
     }
 

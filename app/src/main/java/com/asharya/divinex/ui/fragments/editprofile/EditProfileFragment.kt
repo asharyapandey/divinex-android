@@ -14,6 +14,7 @@ import android.view.ViewGroup
 import android.widget.*
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.asharya.divinex.R
 import com.asharya.divinex.api.ServiceBuilder
@@ -35,6 +36,9 @@ class EditProfileFragment : Fragment() {
     private lateinit var rgGender: RadioGroup
     private lateinit var btnFinishEdit: Button
     private lateinit var tvEditUsername:TextView
+    private lateinit var rbMale: RadioButton
+    private lateinit var rbFemale: RadioButton
+    private lateinit var rbOthers: RadioButton
 
     private val args by navArgs<EditProfileFragmentArgs>()
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -54,6 +58,9 @@ class EditProfileFragment : Fragment() {
         rgGender= view.findViewById(R.id.rgGender)
         btnFinishEdit= view.findViewById(R.id.btnFinishEdit)
         tvEditUsername = view.findViewById(R.id.tvEditUsername)
+        rbFemale = view.findViewById(R.id.rdoFemale)
+        rbMale= view.findViewById(R.id.rdoMale)
+        rbOthers= view.findViewById(R.id.rdoOthers)
 
         // setting values in view
         etEmail.setText(args.user.email)
@@ -61,6 +68,17 @@ class EditProfileFragment : Fragment() {
         imagePath = imagePath.replace("\\", "/")
         Glide.with(requireActivity()).load(imagePath).into(civEditProfileImage)
         tvEditUsername.text = args.user.username
+        when (args.user.gender) {
+            "Male" -> {
+                rbMale.isChecked = true
+            }
+            "Female" -> {
+                rbFemale.isChecked = true
+            }
+            else -> {
+                rbOthers.isChecked = true
+            }
+        }
 
 
         // viewmodel
@@ -71,10 +89,26 @@ class EditProfileFragment : Fragment() {
             EditProfileViewModelFactory(repository!!)
         ).get(EditProfileViewModel::class.java)
 
+        viewModel.profileUpdated.observe(viewLifecycleOwner, androidx.lifecycle.Observer { isUpdated ->
+            if (isUpdated) {
+                val action = EditProfileFragmentDirections.actionEditProfileFragmentToProfileFragment()
+                findNavController().navigate(action)
+            }
+         })
+
 
         // opening menu
         civEditProfileImage.setOnClickListener {
             loadPopUpMenu()
+        }
+
+        btnFinishEdit.setOnClickListener {
+            val email = etEmail.text.toString()
+            val rbId = rgGender.checkedRadioButtonId
+            val rb = view.findViewById<RadioButton>(rbId)
+            val gender = rb.text.toString()
+
+            viewModel.updateProfile(email, imageUrl,args.user._id,gender)
         }
         return view
     }
@@ -82,12 +116,8 @@ class EditProfileFragment : Fragment() {
     private fun validate(): Boolean {
         when {
             TextUtils.isEmpty(etEmail.text) -> {
-                etEmail.error = "Please Add a Caption"
+                etEmail.error = "Please Add a Email"
                 etEmail.requestFocus()
-                return false
-            }
-            imageUrl == null -> {
-                Toast.makeText(context, "Please Select an Image", Toast.LENGTH_SHORT).show()
                 return false
             }
         }

@@ -3,7 +3,10 @@ package com.asharya.divinex.api
 import com.asharya.divinex.model.User
 import com.asharya.divinex.response.LoginResponse
 import com.asharya.divinex.response.SearchResponse
+import com.asharya.divinex.response.UpdateDeletePostResponse
 import com.asharya.divinex.response.UserResponse
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
 import retrofit2.Response
 import retrofit2.http.*
 
@@ -51,4 +54,23 @@ interface UserAPI {
         @Header("auth-token") token: String,
         @Path("id") id: String
     ) : Response<LoginResponse>
+
+    @Multipart
+    @PUT("user/{id}")
+    suspend fun updateProfile(
+        @Header("auth-token") token: String,
+        @Path("id") id: String,
+        @Part("email") email: RequestBody,
+        @Part("gender") gender: RequestBody,
+        @Part image: MultipartBody.Part
+    ): Response<UserResponse>
+
+    @FormUrlEncoded
+    @PUT("user/{id}")
+    suspend fun updateProfile(
+        @Header("auth-token") token: String,
+        @Path("id") id: String,
+        @Field("email") email: String,
+        @Field("gender") gender: String
+    ): Response<UserResponse>
 }
