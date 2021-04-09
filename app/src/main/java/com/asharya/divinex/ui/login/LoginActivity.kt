@@ -1,6 +1,7 @@
 package com.asharya.divinex.ui.login
 
 import android.content.Intent
+import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.TextUtils
@@ -10,6 +11,7 @@ import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.asharya.divinex.R
 import com.asharya.divinex.api.ServiceBuilder
@@ -43,15 +45,28 @@ class LoginActivity : AppCompatActivity() {
 
         val userDao = DivinexDB.getInstance(this@LoginActivity).getUserDAO()
         val repository = UserRepository(userDao)
-        viewModel = ViewModelProvider(this, LoginViewModelFactory(repository)).get(LoginViewModel::class.java)
+        val sharedPref = getSharedPreferences("MyPref", MODE_PRIVATE)
+        viewModel = ViewModelProvider(this, LoginViewModelFactory(repository, sharedPref)).get(LoginViewModel::class.java)
 
 
+        viewModel.isLoggedIn.observe(this, Observer { isLoggedIn ->
+            if (isLoggedIn) {
+                startActivity(Intent(this@LoginActivity, DashboardActivity::class.java))
+                finish()
+            } else {
+                val snackbar = Snackbar.make(clLogin, "Invalid Credentials", Snackbar.LENGTH_LONG)
+                snackbar.setAction("OK", View.OnClickListener {
+                    snackbar.dismiss()
+                })
+                snackbar.show()
+            }
+        })
 
         btnLogin.setOnClickListener {
             if (validate()) {
                 val username = etUsername.text.toString().trim()
                 val password = etPassword.text.toString().trim()
-                loginAPI(username, password)
+                viewModel.login(username, password)
             }
         }
 

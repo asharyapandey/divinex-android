@@ -1,6 +1,8 @@
 package com.asharya.divinex.ui.login
 
+import android.content.SharedPreferences
 import android.util.Log
+import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -15,6 +17,7 @@ import java.lang.Exception
 
 class LoginViewModel(
     private val userRepository: UserRepository,
+    private val myPref : SharedPreferences
 ) : ViewModel() {
 
 
@@ -22,13 +25,17 @@ class LoginViewModel(
     val isLoggedIn: LiveData<Boolean>
         get() = _isLoggedIn
 
-    suspend fun login(username: String, password: String) {
+    fun login(username: String, password: String) {
         viewModelScope.launch {
             try {
                 val response = userRepository.loginUser(username, password)
                 if (response.success == true) {
+                    // current user details
                     ServiceBuilder.token = response.token
                     ServiceBuilder.currentUser = response.user
+                    // saving to shared pref
+                    saveSharedPref(username, password)
+                    // updating the ui
                     _isLoggedIn.value = true
                 }
             } catch (ex: Exception) {
@@ -36,6 +43,12 @@ class LoginViewModel(
                 _isLoggedIn.value = false
             }
         }
+    }
+    private fun saveSharedPref(username: String, password: String) {
+        val editor = myPref.edit()
+        editor.putString("username", username)
+        editor.putString("password", password)
+        editor.apply()
     }
 
     override fun onCleared() {
