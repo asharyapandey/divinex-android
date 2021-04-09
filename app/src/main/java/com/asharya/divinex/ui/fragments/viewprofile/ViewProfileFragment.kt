@@ -68,7 +68,8 @@ class ViewProfileFragment : Fragment(), UserPostsAdapter.UserPostClickListener {
         rvUserPosts.adapter = adapter
         rvUserPosts.layoutManager = GridLayoutManager(context, 3)
 
-        val repository = UserRepository()
+        val userDao = DivinexDB.getInstance(requireContext()).getUserDAO()
+        val repository = UserRepository(userDao)
         val postDao = context?.let { DivinexDB.getInstance(it).getPostDAO() }
         val postRepository = postDao?.let { PostRepository(it) }
         viewModelView =

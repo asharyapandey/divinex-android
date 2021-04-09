@@ -21,6 +21,9 @@
         <action
             android:id="@+id/action_profileFragment_to_userPostsFragment"
             app:destination="@id/userPostsFragment" />
+        <action
+            android:id="@+id/action_profileFragment_to_editProfileFragment"
+            app:destination="@id/editProfileFragment" />
     </fragment>
     <fragment
         android:id="@+id/homeFragment"
@@ -104,5 +107,14 @@
             android:name="postID"
             app:argType="string"
             android:defaultValue='""' />
+    </fragment>
+    <fragment
+        android:id="@+id/editProfileFragment"
+        android:name="com.asharya.divinex.ui.fragments.editprofile.EditProfileFragment"
+        android:label="fragment_edit_profile"
+        tools:layout="@layout/fragment_edit_profile" >
+        <argument
+            android:name="user"
+            app:argType="com.asharya.divinex.entity.User" />
     </fragment>
 </navigation>

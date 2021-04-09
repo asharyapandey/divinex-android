@@ -21,6 +21,7 @@ import com.asharya.divinex.db.DivinexDB
 import com.asharya.divinex.repository.PostRepository
 import com.asharya.divinex.repository.UserRepository
 import com.bumptech.glide.Glide
+import de.hdodenhof.circleimageview.CircleImageView
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileOutputStream
@@ -29,9 +30,11 @@ import java.util.*
 
 class EditProfileFragment : Fragment() {
     private lateinit var viewModel:EditProfileViewModel
-    private lateinit var ivPostImage: ImageView
-    private lateinit var etPostCaption: EditText
-    private lateinit var btnUploadPost: Button
+    private lateinit var civEditProfileImage: CircleImageView
+    private lateinit var etEmail: EditText
+    private lateinit var rgGender: RadioGroup
+    private lateinit var btnFinishEdit: Button
+    private lateinit var tvEditUsername:TextView
 
 //    private val args by navArgs<>()
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -43,21 +46,36 @@ class EditProfileFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val view = inflater.inflate(R.layout.fragment_edit_post, container, false)
+        val view = inflater.inflate(R.layout.fragment_edit_profile, container, false)
+
+        // binding views
+        civEditProfileImage = view.findViewById(R.id.civEditProfileImage)
+        etEmail= view.findViewById(R.id.etEmail)
+        rgGender= view.findViewById(R.id.rgGender)
+        btnFinishEdit= view.findViewById(R.id.btnFinishEdit)
+        tvEditUsername = view.findViewById(R.id.tvEditUsername)
+
+
         // view model
         val repository = UserRepository()
         viewModel = ViewModelProvider(
             this,
             EditProfileViewModelFactory(repository!!)
         ).get(EditProfileViewModel::class.java)
+
+
+        // opening menu
+        civEditProfileImage.setOnClickListener {
+            loadPopUpMenu()
+        }
         return view
     }
 
     private fun validate(): Boolean {
         when {
-            TextUtils.isEmpty(etPostCaption.text) -> {
-                etPostCaption.error = "Please Add a Caption"
-                etPostCaption.requestFocus()
+            TextUtils.isEmpty(etEmail.text) -> {
+                etEmail.error = "Please Add a Caption"
+                etEmail.requestFocus()
                 return false
             }
             imageUrl == null -> {
@@ -69,7 +87,7 @@ class EditProfileFragment : Fragment() {
     }
 
     private fun loadPopUpMenu() {
-        val popupMenu = PopupMenu(context, ivPostImage)
+        val popupMenu = PopupMenu(context, civEditProfileImage)
         popupMenu.menuInflater.inflate(R.menu.gallery_camera, popupMenu.menu)
         popupMenu.setOnMenuItemClickListener { item ->
             when (item.itemId) {
@@ -107,14 +125,14 @@ class EditProfileFragment : Fragment() {
                 cursor!!.moveToFirst()
                 val columnIndex = cursor.getColumnIndex(filePathColumn[0])
                 imageUrl = cursor.getString(columnIndex)
-                ivPostImage.setImageBitmap(BitmapFactory.decodeFile(imageUrl))
+                civEditProfileImage.setImageBitmap(BitmapFactory.decodeFile(imageUrl))
                 cursor.close()
             } else if (requestCode == REQUEST_CAMERA_CODE && data != null) {
                 val imageBitmap = data.extras?.get("data") as Bitmap
                 val timeStamp: String = SimpleDateFormat("yyyyMMdd_HHmmss").format(Date())
                 val file = bitmapToFile(imageBitmap, "$timeStamp.jpg")
                 imageUrl = file!!.absolutePath
-                ivPostImage.setImageBitmap(BitmapFactory.decodeFile(imageUrl))
+                civEditProfileImage.setImageBitmap(BitmapFactory.decodeFile(imageUrl))
             }
         }
 

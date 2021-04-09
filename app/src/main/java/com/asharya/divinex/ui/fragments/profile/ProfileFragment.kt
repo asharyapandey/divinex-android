@@ -18,6 +18,7 @@ import com.asharya.divinex.adapters.UserPostsAdapter
 import com.asharya.divinex.api.ServiceBuilder
 import com.asharya.divinex.db.DivinexDB
 import com.asharya.divinex.entity.Post
+import com.asharya.divinex.entity.User
 import com.asharya.divinex.repository.PostRepository
 import com.asharya.divinex.repository.UserRepository
 import com.bumptech.glide.Glide
@@ -28,6 +29,7 @@ class ProfileFragment : Fragment(), UserPostsAdapter.UserPostClickListener {
     private lateinit var tvUsername : TextView
     private lateinit var viewModel: ProfileViewModel
     private lateinit var btnLoadMaps: Button
+    private lateinit var btnEditProfile: Button
     private lateinit var rvUserPosts: RecyclerView
     private lateinit var tvFollowers: TextView
     private lateinit var tvFollowing: TextView
@@ -48,6 +50,7 @@ class ProfileFragment : Fragment(), UserPostsAdapter.UserPostClickListener {
         civProfile = view.findViewById(R.id.civProfile)
         tvUsername = view.findViewById(R.id.tvUsername)
         btnLoadMaps = view.findViewById(R.id.btnLoadMaps)
+        btnEditProfile= view.findViewById(R.id.btnEditProfile)
         rvUserPosts = view.findViewById(R.id.rvUserPosts)
         tvFollowers = view.findViewById(R.id.tvFollowers)
         tvFollowing= view.findViewById(R.id.tvFollowing)
@@ -59,7 +62,8 @@ class ProfileFragment : Fragment(), UserPostsAdapter.UserPostClickListener {
         rvUserPosts.adapter = adapter
         rvUserPosts.layoutManager = GridLayoutManager(context, 3 )
 
-        val repository = UserRepository()
+        val userDao = DivinexDB.getInstance(requireContext()).getUserDAO()
+        val repository = UserRepository(userDao)
         val postDao = context?.let { DivinexDB.getInstance(it).getPostDAO() }
         val postRepository = postDao?.let { PostRepository(it) }
         viewModel = ViewModelProvider(this, ProfileViewModelFactory(repository, postRepository!!)).get(ProfileViewModel::class.java)
@@ -74,8 +78,8 @@ class ProfileFragment : Fragment(), UserPostsAdapter.UserPostClickListener {
                 profileImagePath = profileImagePath.replace("\\", "/")
                 Glide.with(requireContext()).load(profileImagePath).into(civProfile)
             }
-            tvFollowers.text = user.followers?.size.toString()
-            tvFollowing.text = user.following?.size.toString()
+            tvFollowers.text = user.followers.toString()
+            tvFollowing.text = user.following.toString()
             user._id?.let { viewModel.getCurrentUserPosts(it) }
         })
 
@@ -87,6 +91,12 @@ class ProfileFragment : Fragment(), UserPostsAdapter.UserPostClickListener {
 
         btnLoadMaps.setOnClickListener {
             val action = ProfileFragmentDirections.actionProfileFragmentToMapsFragment()
+            findNavController().navigate(action)
+        }
+
+        btnEditProfile.setOnClickListener {
+            val user = User("test", "Test", "Test", "Test", "Test", "Test", 1, 1)
+            val action = ProfileFragmentDirections.actionProfileFragmentToEditProfileFragment(user)
             findNavController().navigate(action)
         }
         return view
