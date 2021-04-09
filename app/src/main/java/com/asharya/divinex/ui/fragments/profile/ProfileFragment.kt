@@ -18,6 +18,7 @@ import com.asharya.divinex.adapters.UserPostsAdapter
 import com.asharya.divinex.api.ServiceBuilder
 import com.asharya.divinex.db.DivinexDB
 import com.asharya.divinex.entity.Post
+import com.asharya.divinex.entity.User
 import com.asharya.divinex.repository.PostRepository
 import com.asharya.divinex.repository.UserRepository
 import com.bumptech.glide.Glide
@@ -25,14 +26,16 @@ import de.hdodenhof.circleimageview.CircleImageView
 
 class ProfileFragment : Fragment(), UserPostsAdapter.UserPostClickListener {
     private lateinit var civProfile: CircleImageView
-    private lateinit var tvUsername : TextView
+    private lateinit var tvUsername: TextView
     private lateinit var viewModel: ProfileViewModel
     private lateinit var btnLoadMaps: Button
+    private lateinit var btnEditProfile: Button
     private lateinit var rvUserPosts: RecyclerView
     private lateinit var tvFollowers: TextView
     private lateinit var tvFollowing: TextView
     private lateinit var tvPostNumber: TextView
     private lateinit var tvUsernameHeading: TextView
+    private var theUser: User? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -48,21 +51,26 @@ class ProfileFragment : Fragment(), UserPostsAdapter.UserPostClickListener {
         civProfile = view.findViewById(R.id.civProfile)
         tvUsername = view.findViewById(R.id.tvUsername)
         btnLoadMaps = view.findViewById(R.id.btnLoadMaps)
+        btnEditProfile = view.findViewById(R.id.btnEditProfile)
         rvUserPosts = view.findViewById(R.id.rvUserPosts)
         tvFollowers = view.findViewById(R.id.tvFollowers)
-        tvFollowing= view.findViewById(R.id.tvFollowing)
-        tvUsernameHeading= view.findViewById(R.id.tvUsernameHeading)
-        tvPostNumber= view.findViewById(R.id.tvPostNumber)
+        tvFollowing = view.findViewById(R.id.tvFollowing)
+        tvUsernameHeading = view.findViewById(R.id.tvUsernameHeading)
+        tvPostNumber = view.findViewById(R.id.tvPostNumber)
 
         // for RV
         val adapter = context?.let { UserPostsAdapter(it, this) }
         rvUserPosts.adapter = adapter
-        rvUserPosts.layoutManager = GridLayoutManager(context, 3 )
+        rvUserPosts.layoutManager = GridLayoutManager(context, 3)
 
-        val repository = UserRepository()
+        val userDao = DivinexDB.getInstance(requireContext()).getUserDAO()
+        val repository = UserRepository(userDao)
         val postDao = context?.let { DivinexDB.getInstance(it).getPostDAO() }
         val postRepository = postDao?.let { PostRepository(it) }
-        viewModel = ViewModelProvider(this, ProfileViewModelFactory(repository, postRepository!!)).get(ProfileViewModel::class.java)
+        viewModel =
+            ViewModelProvider(this, ProfileViewModelFactory(repository, postRepository!!)).get(
+                ProfileViewModel::class.java
+            )
 
         viewModel.getCurrentUser()
 
@@ -74,8 +82,9 @@ class ProfileFragment : Fragment(), UserPostsAdapter.UserPostClickListener {
                 profileImagePath = profileImagePath.replace("\\", "/")
                 Glide.with(requireContext()).load(profileImagePath).into(civProfile)
             }
-            tvFollowers.text = user.followers?.size.toString()
-            tvFollowing.text = user.following?.size.toString()
+            tvFollowers.text = user.followers.toString()
+            tvFollowing.text = user.following.toString()
+            theUser = user
             user._id?.let { viewModel.getCurrentUserPosts(it) }
         })
 
@@ -89,11 +98,25 @@ class ProfileFragment : Fragment(), UserPostsAdapter.UserPostClickListener {
             val action = ProfileFragmentDirections.actionProfileFragmentToMapsFragment()
             findNavController().navigate(action)
         }
+
+        btnEditProfile.setOnClickListener {
+            val action = theUser?.let { it1 ->
+                ProfileFragmentDirections.actionProfileFragmentToEditProfileFragment(
+                    it1
+                )
+            }
+            if (action != null) {
+                findNavController().navigate(action)
+            }
+        }
         return view
     }
 
     override fun itemClicked(post: Post, position: Int) {
-        val action = ProfileFragmentDirections.actionProfileFragmentToUserPostsFragment(post.userID!!, position)
+        val action = ProfileFragmentDirections.actionProfileFragmentToUserPostsFragment(
+            post.userID!!,
+            position
+        )
         findNavController().navigate(action)
     }
 }

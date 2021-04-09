@@ -73,7 +73,8 @@ class RegisterActivity : AppCompatActivity() {
     private fun registerUser(user: User) {
         CoroutineScope(Dispatchers.IO).launch {
             try {
-                val repository = UserRepository()
+                val userDao = DivinexDB.getInstance(this@RegisterActivity).getUserDAO()
+                val repository = UserRepository(userDao)
                 val response = repository.registerUser(user)
                 if (response.success == true) {
                     withContext(Dispatchers.Main) {

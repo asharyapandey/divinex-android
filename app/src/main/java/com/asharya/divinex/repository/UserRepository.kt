@@ -4,13 +4,17 @@ import android.util.Log
 import com.asharya.divinex.api.ApiRequest
 import com.asharya.divinex.api.ServiceBuilder
 import com.asharya.divinex.api.UserAPI
+import com.asharya.divinex.dao.UserDAO
+import com.asharya.divinex.db.DivinexDB
 import com.asharya.divinex.model.User
 import com.asharya.divinex.response.LoginResponse
 import com.asharya.divinex.response.SearchResponse
 import com.asharya.divinex.response.UserResponse
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
 import java.lang.Exception
 
-class UserRepository : ApiRequest() {
+class UserRepository(private val userDAO: UserDAO) : ApiRequest() {
     // retrofit instance of userAPI
     private val userApi = ServiceBuilder.buildService(UserAPI::class.java)
 
@@ -27,11 +31,44 @@ class UserRepository : ApiRequest() {
         }
     }
 
-    suspend fun getCurrentUser(): UserResponse {
-        return apiRequest {
-            userApi.getCurrentUser(ServiceBuilder.token!!)
+    suspend fun getCurrentUser(): com.asharya.divinex.entity.User {
+        // save in room
+        return try {
+            addCurrentUser()
+            userDAO.retrieveUser()
+        } catch (ex: Exception) {
+            Log.e("UserRepo", ex.toString())
+            userDAO.retrieveUser()
         }
     }
+
+    private suspend fun addCurrentUser() {
+        val response = apiRequest {
+            userApi.getCurrentUser(ServiceBuilder.token!!)
+        }
+        if (response.success == true) {
+            val user = response.user?.followers?.let {
+                response.user.following?.let { it1 ->
+                    response.user?._id?.let { it2 ->
+                        com.asharya.divinex.entity.User(
+                            _id = it2,
+                            username = response.user.username,
+                            gender = response.user.gender,
+                            profilePicture = response.user.profilePicture,
+                            email = response.user.email,
+                            followers = it.size,
+                            following = it1.size,
+                            password = response.user.password
+                        )
+                    }
+                }
+            }
+            if (user != null) {
+                userDAO.insertUser(user)
+            }
+        }
+    }
+
 
     suspend fun getUserById(id: String): UserResponse {
         return apiRequest {
@@ -51,7 +88,7 @@ class UserRepository : ApiRequest() {
         return emptyList()
     }
 
-    suspend fun followUser(id: String) : Boolean {
+    suspend fun followUser(id: String): Boolean {
         try {
             val response = apiRequest {
                 userApi.followUser(ServiceBuilder.token!!, id)
@@ -80,6 +117,17 @@ class UserRepository : ApiRequest() {
         } catch (ex: Exception) {
             return false
             Log.d("UserRepo", ex.toString())
+        }
+    }
+
+    suspend fun updateProfileWithImage(image: MultipartBody.Part, userID: String, email: RequestBody, gender: RequestBody) : UserResponse {
+        return apiRequest {
+            userApi.updateProfile(ServiceBuilder.token!!, userID, email, gender, image)
+        }
+    }
+    suspend fun updateProfile(userID: String,email: String, gender: String) : UserResponse {
+        return apiRequest {
+            userApi.updateProfile(ServiceBuilder.token!!, userID, email, gender)
         }
     }
 
