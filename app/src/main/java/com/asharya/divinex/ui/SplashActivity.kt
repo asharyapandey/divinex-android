@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.widget.Toast
 import com.asharya.divinex.R
 import com.asharya.divinex.api.ServiceBuilder
+import com.asharya.divinex.db.DivinexDB
 import com.asharya.divinex.repository.UserRepository
 import kotlinx.coroutines.*
 import java.lang.Exception
@@ -31,7 +32,8 @@ class SplashActivity : AppCompatActivity() {
         }
         withContext(Dispatchers.IO) {
             try {
-                val repository = UserRepository()
+                val userDao = DivinexDB.getInstance(this@SplashActivity).getUserDAO()
+                val repository = UserRepository(userDao)
                 val response = repository.loginUser(username!!, password!!)
                 if (response.success == true) {
                     ServiceBuilder.token = response.token

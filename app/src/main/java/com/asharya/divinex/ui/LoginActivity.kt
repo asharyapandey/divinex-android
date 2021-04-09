@@ -57,7 +57,8 @@ class LoginActivity : AppCompatActivity() {
     private fun loginAPI(username: String, password: String) {
         CoroutineScope(Dispatchers.IO).launch {
             try {
-                val repository = UserRepository()
+                val userDao = DivinexDB.getInstance(this@LoginActivity).getUserDAO()
+                val repository = UserRepository(userDao)
                 val response = repository.loginUser(username, password)
                 if (response.success == true) {
                     saveSharedPref(username, password)

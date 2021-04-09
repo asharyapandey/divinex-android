@@ -36,7 +36,7 @@ class EditProfileFragment : Fragment() {
     private lateinit var btnFinishEdit: Button
     private lateinit var tvEditUsername:TextView
 
-//    private val args by navArgs<>()
+    private val args by navArgs<EditProfileFragmentArgs>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
     }
@@ -55,9 +55,17 @@ class EditProfileFragment : Fragment() {
         btnFinishEdit= view.findViewById(R.id.btnFinishEdit)
         tvEditUsername = view.findViewById(R.id.tvEditUsername)
 
+        // setting values in view
+        etEmail.setText(args.user.email)
+        var imagePath = ServiceBuilder.loadImagePath() + args.user.profilePicture
+        imagePath = imagePath.replace("\\", "/")
+        Glide.with(requireActivity()).load(imagePath).into(civEditProfileImage)
+        tvEditUsername.text = args.user.username
 
-        // view model
-        val repository = UserRepository()
+
+        // viewmodel
+        val userDao = DivinexDB.getInstance(requireContext()).getUserDAO()
+        val repository = UserRepository(userDao)
         viewModel = ViewModelProvider(
             this,
             EditProfileViewModelFactory(repository!!)

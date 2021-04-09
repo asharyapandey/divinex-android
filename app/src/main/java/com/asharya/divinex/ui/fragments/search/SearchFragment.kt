@@ -13,6 +13,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.asharya.divinex.R
 import com.asharya.divinex.adapters.UserAdapter
+import com.asharya.divinex.db.DivinexDB
 import com.asharya.divinex.model.User
 import com.asharya.divinex.repository.UserRepository
 
@@ -35,7 +36,8 @@ class SearchFragment : Fragment(R.layout.fragment_search), UserAdapter.OnItemCli
         rvSearch = view.findViewById(R.id.rvSearch)
         val adapter = context?.let { UserAdapter(it, this) }
         rvSearch.adapter = adapter
-        val repository = UserRepository()
+        val userDao = DivinexDB.getInstance(requireContext()).getUserDAO()
+        val repository = UserRepository(userDao)
         viewModel = ViewModelProvider(this, SearchViewModelFactory(repository)).get(SearchViewModel::class.java)
 
         viewModel.users.observe(viewLifecycleOwner, Observer { users ->
