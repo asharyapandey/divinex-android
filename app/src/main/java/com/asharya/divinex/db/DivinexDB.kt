@@ -9,12 +9,13 @@ import com.asharya.divinex.dao.CommentDAO
 import com.asharya.divinex.dao.PostDAO
 import com.asharya.divinex.dao.UserDAO
 import com.asharya.divinex.entity.Comment
+import com.asharya.divinex.entity.Notification
 import com.asharya.divinex.entity.Post
 import com.asharya.divinex.entity.User
 import com.asharya.divinex.utils.TimeStampConverter
 
 @Database(
-    entities = [(Post::class), (Comment::class), (User::class)],
+    entities = [(Post::class), (Comment::class), (User::class), (Notification::class)],
     version = 1
 )
 @TypeConverters(TimeStampConverter::class)

@@ -9,9 +9,9 @@ import kotlin.system.measureTimeMillis
 @Entity
 data class Notification(
     @PrimaryKey
-    var _id : String,
-    var username: String,
-    var userID: String,
-    var profilePicture: String,
-    var action: String? =null,
+    var _id: String,
+    var username: String? = null,
+    var userID: String? = null,
+    var profilePicture: String? = null,
+    var action: String? = null,
 )
