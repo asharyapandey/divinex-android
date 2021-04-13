@@ -1,7 +1,7 @@
-package com.asharya.divinex.ui
+package com.asharya.divinex.ui.login
 
 import android.content.Intent
-import android.content.pm.PackageManager
+import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.TextUtils
@@ -11,12 +11,14 @@ import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.core.app.ActivityCompat
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import com.asharya.divinex.R
 import com.asharya.divinex.api.ServiceBuilder
 import com.asharya.divinex.db.DivinexDB
-import com.asharya.divinex.model.User
 import com.asharya.divinex.repository.UserRepository
+import com.asharya.divinex.ui.DashboardActivity
+import com.asharya.divinex.ui.register.RegisterActivity
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -30,6 +32,7 @@ class LoginActivity : AppCompatActivity() {
     private lateinit var etPassword: EditText
     private lateinit var btnLogin: Button
     private lateinit var clLogin: ConstraintLayout
+    private lateinit var viewModel: LoginViewModel
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
@@ -40,11 +43,30 @@ class LoginActivity : AppCompatActivity() {
         tvRegister = findViewById(R.id.tvRegister)
         clLogin = findViewById(R.id.clLogin)
 
+        val userDao = DivinexDB.getInstance(this@LoginActivity).getUserDAO()
+        val repository = UserRepository(userDao)
+        val sharedPref = getSharedPreferences("MyPref", MODE_PRIVATE)
+        viewModel = ViewModelProvider(this, LoginViewModelFactory(repository, sharedPref)).get(LoginViewModel::class.java)
+
+
+        viewModel.isLoggedIn.observe(this, Observer { isLoggedIn ->
+            if (isLoggedIn) {
+                startActivity(Intent(this@LoginActivity, DashboardActivity::class.java))
+                finish()
+            } else {
+                val snackbar = Snackbar.make(clLogin, "Invalid Credentials", Snackbar.LENGTH_LONG)
+                snackbar.setAction("OK", View.OnClickListener {
+                    snackbar.dismiss()
+                })
+                snackbar.show()
+            }
+        })
+
         btnLogin.setOnClickListener {
             if (validate()) {
                 val username = etUsername.text.toString().trim()
                 val password = etPassword.text.toString().trim()
-                loginAPI(username, password)
+                viewModel.login(username, password)
             }
         }
 
