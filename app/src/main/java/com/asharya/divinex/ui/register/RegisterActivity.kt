@@ -5,6 +5,8 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.TextUtils
 import android.widget.*
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import com.asharya.divinex.R
 import com.asharya.divinex.db.DivinexDB
 import com.asharya.divinex.model.User
@@ -25,6 +27,8 @@ class RegisterActivity : AppCompatActivity() {
     private lateinit var rgGender: RadioGroup
     private lateinit var rdoOthers: RadioButton
     private lateinit var tvLogin: TextView
+
+    private lateinit var viewModel: RegisterViewModel
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_register)
@@ -38,6 +42,23 @@ class RegisterActivity : AppCompatActivity() {
         rdoOthers = findViewById(R.id.rdoOthers)
         tvLogin = findViewById(R.id.tvLogin)
 
+
+        val userDao = DivinexDB.getInstance(this@RegisterActivity).getUserDAO()
+        val repository = UserRepository(userDao)
+        viewModel = ViewModelProvider(
+            this,
+            RegisterViewModelFactory(repository)
+        ).get(RegisterViewModel::class.java)
+
+        viewModel.isRegistered.observe(this, Observer { isRegistered ->
+            if (isRegistered) {
+                toLogin()
+            } else {
+                Toast.makeText(this, "Something Went Wrong Please try Again!!", Toast.LENGTH_SHORT)
+                    .show()
+            }
+        })
+
         btnRegister.setOnClickListener {
             if (validate()) {
                 val username = etUsername.text.toString()
@@ -49,16 +70,11 @@ class RegisterActivity : AppCompatActivity() {
                 val gender = checkedRadioButton.text.toString()
 
                 if (password == confirmPassword) {
-                    val user = User(username = username, email =  email, gender =  gender, password =  password)
-//                    addToDatabase(user)
-                    registerUser(user)
-                    toLogin()
+                    viewModel.registerUser(username, password, email, gender)
                 } else {
                     etConfirmPassword.error = "Passwords do not match"
                     etConfirmPassword.requestFocus()
                 }
-
-
             }
         }
 
@@ -69,30 +85,6 @@ class RegisterActivity : AppCompatActivity() {
 
     private fun toLogin() {
         startActivity(Intent(this, LoginActivity::class.java))
-    }
-
-    private fun registerUser(user: User) {
-        CoroutineScope(Dispatchers.IO).launch {
-            try {
-                val userDao = DivinexDB.getInstance(this@RegisterActivity).getUserDAO()
-                val repository = UserRepository(userDao)
-                val response = repository.registerUser(user)
-                if (response.success == true) {
-                    withContext(Dispatchers.Main) {
-                        Toast.makeText(this@RegisterActivity, "User Registered", Toast.LENGTH_SHORT)
-                            .show()
-                    }
-                }
-
-            } catch (ex: Exception) {
-                withContext(Dispatchers.Main) {
-                    Toast.makeText(this@RegisterActivity, ex.toString(), Toast.LENGTH_SHORT).show()
-                }
-
-            }
-
-        }
-
     }
 
     private fun validate(): Boolean {
