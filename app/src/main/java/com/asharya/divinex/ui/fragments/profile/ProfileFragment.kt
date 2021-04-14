@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.PopupMenu
 import android.widget.TextView
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -112,7 +113,15 @@ class ProfileFragment : Fragment(), UserPostsAdapter.UserPostClickListener {
         }
 
         tvUsernameHeading.setOnClickListener {
-            loadPopUpMenu()
+            val popupMenu = PopupMenu(context, it)
+            popupMenu.menuInflater.inflate(R.menu.logout, popupMenu.menu)
+            popupMenu.setOnMenuItemClickListener { item ->
+                when (item.itemId) {
+                    R.id.menuLogout -> logout()
+                }
+                true
+            }
+            popupMenu.show()
         }
         return view
     }
@@ -125,18 +134,8 @@ class ProfileFragment : Fragment(), UserPostsAdapter.UserPostClickListener {
         findNavController().navigate(action)
     }
 
-    private fun loadPopUpMenu() {
-        val popupMenu = PopupMenu(context, view)
-        popupMenu.menuInflater.inflate(R.menu.logout, popupMenu.menu)
-        popupMenu.setOnMenuItemClickListener { item ->
-            when (item.itemId) {
-                R.id.menuLogout -> logout()
-            }
-            true
-        }
-        popupMenu.show()
-    }
 
     private fun logout() {
+        Toast.makeText(context, "Logout hunxa aba", Toast.LENGTH_SHORT).show()
     }
 }
