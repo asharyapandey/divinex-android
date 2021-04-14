@@ -113,5 +113,9 @@ class PostRepository(private val postDAO: PostDAO) : ApiRequest() {
         }
     }
 
+    suspend fun deleteAllPosts() {
+        postDAO.deleteAllPost()
+    }
+
 
 }

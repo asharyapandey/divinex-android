@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.PopupMenu
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -109,6 +110,10 @@ class ProfileFragment : Fragment(), UserPostsAdapter.UserPostClickListener {
                 findNavController().navigate(action)
             }
         }
+
+        tvUsernameHeading.setOnClickListener {
+            loadPopUpMenu()
+        }
         return view
     }
 
@@ -118,5 +123,20 @@ class ProfileFragment : Fragment(), UserPostsAdapter.UserPostClickListener {
             position
         )
         findNavController().navigate(action)
+    }
+
+    private fun loadPopUpMenu() {
+        val popupMenu = PopupMenu(context, view)
+        popupMenu.menuInflater.inflate(R.menu.logout, popupMenu.menu)
+        popupMenu.setOnMenuItemClickListener { item ->
+            when (item.itemId) {
+                R.id.menuLogout -> logout()
+            }
+            true
+        }
+        popupMenu.show()
+    }
+
+    private fun logout() {
     }
 }

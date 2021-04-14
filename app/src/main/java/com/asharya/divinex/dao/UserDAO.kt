@@ -13,4 +13,7 @@ interface UserDAO {
 
     @Query("select * from User")
     suspend fun retrieveUser() : User
+
+    @Query("delete from User")
+    suspend fun deleteAllUser()
 }

@@ -25,8 +25,9 @@ class ProfileViewModel(
     val posts: LiveData<List<Post>>
         get() = _posts
 
-    init {
-    }
+    private val _isLoggedOut = MutableLiveData<Boolean>()
+    val isLoggedOut: LiveData<Boolean>
+        get() = _isLoggedOut
 
     fun getCurrentUser() {
         viewModelScope.launch {
@@ -41,6 +42,20 @@ class ProfileViewModel(
                 _posts.value = postRepository.getUserPosts(id)
             } catch (ex: Exception) {
                 Log.i("AddPostViewModel", ex.toString())
+            }
+        }
+    }
+
+    fun logout() {
+        // delete everything
+        viewModelScope.launch {
+            try {
+                postRepository.deleteAllPosts()
+                userRepository.deleteAllUser()
+                _isLoggedOut.value = true
+            } catch (ex: Exception) {
+                Log.e("ProfileViewModel", ex.toString())
+                _isLoggedOut.value = false
             }
         }
     }
