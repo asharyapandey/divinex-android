@@ -36,16 +36,17 @@ class SplashViewModel(
                 if (username == "" || password == "") {
                     delay(500)
                     _isLoggedIn.value = false
-                }
-                val response = userRepository.loginUser(username!!, password!!)
-                if (response.success == true) {
-                    // current user details
-                    ServiceBuilder.token = response.token
-                    ServiceBuilder.currentUser = response.user
-                    // saving to shared pref
-                    saveSharedPref(username, password)
-                    // updating the ui
-                    _isLoggedIn.value = true
+                } else {
+                    val response = userRepository.loginUser(username!!, password!!)
+                    if (response.success == true) {
+                        // current user details
+                        ServiceBuilder.token = response.token
+                        ServiceBuilder.currentUser = response.user
+                        // saving to shared pref
+                        saveSharedPref(username, password)
+                        // updating the ui
+                        _isLoggedIn.value = true
+                    }
                 }
             } catch (ex: Exception) {
                 Log.e("LoginViewModel", ex.toString())
