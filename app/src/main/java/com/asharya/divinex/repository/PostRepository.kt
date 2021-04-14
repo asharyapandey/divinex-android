@@ -26,74 +26,79 @@ class PostRepository(private val postDAO: PostDAO) : ApiRequest() {
     }
 
     // update post
-    suspend fun updatePost(caption: RequestBody, image: MultipartBody.Part, postID: String): UpdateDeletePostResponse{
+    suspend fun updatePost(
+        caption: RequestBody,
+        image: MultipartBody.Part,
+        postID: String
+    ): UpdateDeletePostResponse {
         return apiRequest {
-            postAPI.updatePost(ServiceBuilder.token!!,postID, caption, image)
+            postAPI.updatePost(ServiceBuilder.token!!, postID, caption, image)
         }
     }
 
     suspend fun getPostFeed(): List<Post> {
-        refreshPosts()
-        return postDAO.getAllPosts(ServiceBuilder.currentUser?._id!!)
+        return try {
+            refreshPosts()
+            postDAO.getAllPosts(ServiceBuilder.currentUser?._id!!)
+        } catch (ex: Exception) {
+            Log.e("PostRepo", ex.toString())
+            postDAO.getAllPosts(ServiceBuilder.currentUser?._id!!)
+        }
     }
 
     private suspend fun refreshPosts() {
-        try {
-            val response = apiRequest {
-                postAPI.getPostFeed(ServiceBuilder.token!!)
-            }
-            if (response.success == true) {
-                for (post in response.posts!!) {
-                    val date = OffsetDateTime.parse(post.createdAt)
-                    postDAO.addPost(
-                        Post(
-                            _id = post._id,
-                            caption = post.caption,
-                            image = post.image,
-                            userID = post.user?._id,
-                            username = post.user?.username,
-                            profilePicture = post.user?.profilePicture,
-                            createdAt = date
-                        )
+        val response = apiRequest {
+            postAPI.getPostFeed(ServiceBuilder.token!!)
+        }
+        if (response.success == true) {
+            for (post in response.posts!!) {
+                val date = OffsetDateTime.parse(post.createdAt)
+                postDAO.addPost(
+                    Post(
+                        _id = post._id,
+                        caption = post.caption,
+                        image = post.image,
+                        userID = post.user?._id,
+                        username = post.user?.username,
+                        profilePicture = post.user?.profilePicture,
+                        createdAt = date
                     )
-                }
+                )
             }
-
-        } catch (ex: Exception) {
-            Log.e("PostRepo", ex.toString())
         }
     }
 
     suspend fun getUserPosts(userID: String): List<Post> {
-        refreshUserPosts(userID)
-        return postDAO.getAllUserPost(userID)
+        return try {
+            refreshUserPosts(userID)
+            postDAO.getAllUserPost(userID)
+        } catch (ex: Exception) {
+            Log.e("PostRepo", ex.toString())
+            postDAO.getAllUserPost(userID)
+        }
     }
 
     private suspend fun refreshUserPosts(id: String) {
-        try {
-            val response = apiRequest {
-                postAPI.getUsersPostById(ServiceBuilder.token!!, id)
-            }
-            if (response.success == true) {
-                for (post in response.posts!!) {
-                    val date = OffsetDateTime.parse(post.createdAt)
-                    postDAO.addPost(
-                        Post(
-                            _id = post._id,
-                            caption = post.caption,
-                            image = post.image,
-                            userID = post.user?._id,
-                            username = post.user?.username,
-                            profilePicture = post.user?.profilePicture,
-                            createdAt = date
-                        )
-                    )
-                }
-            }
-
-        } catch (ex: Exception) {
-            Log.e("PostRepo", ex.toString())
+        val response = apiRequest {
+            postAPI.getUsersPostById(ServiceBuilder.token!!, id)
         }
+        if (response.success == true) {
+            for (post in response.posts!!) {
+                val date = OffsetDateTime.parse(post.createdAt)
+                postDAO.addPost(
+                    Post(
+                        _id = post._id,
+                        caption = post.caption,
+                        image = post.image,
+                        userID = post.user?._id,
+                        username = post.user?.username,
+                        profilePicture = post.user?.profilePicture,
+                        createdAt = date
+                    )
+                )
+            }
+        }
+
     }
 
     suspend fun deleteUserPosts(userID: String) {
