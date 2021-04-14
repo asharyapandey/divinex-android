@@ -6,6 +6,7 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import com.asharya.divinex.dao.CommentDAO
+import com.asharya.divinex.dao.NotificationDAO
 import com.asharya.divinex.dao.PostDAO
 import com.asharya.divinex.dao.UserDAO
 import com.asharya.divinex.entity.Comment
@@ -24,6 +25,7 @@ abstract class DivinexDB : RoomDatabase() {
     abstract fun getPostDAO() : PostDAO
     abstract fun getCommentDAO() : CommentDAO
     abstract fun getUserDAO() : UserDAO
+    abstract fun getNotificationDAO(): NotificationDAO
 
     companion object {
         @Volatile

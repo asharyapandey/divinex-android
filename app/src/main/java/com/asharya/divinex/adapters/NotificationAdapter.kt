@@ -14,7 +14,7 @@ import com.asharya.divinex.model.User
 import com.bumptech.glide.Glide
 import de.hdodenhof.circleimageview.CircleImageView
 
-class NotificatonAdapter(val context: Context) : RecyclerView.Adapter<NotificatonAdapter.NotificationViewHolder>() {
+class NotificationAdapter(val context: Context) : RecyclerView.Adapter<NotificationAdapter.NotificationViewHolder>() {
     private var notificationList= emptyList<Notification>()
 
     inner class NotificationViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
