@@ -1,10 +1,12 @@
 package com.asharya.divinex.ui.fragments.profile
 
+import android.content.SharedPreferences
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.asharya.divinex.api.ServiceBuilder
 import com.asharya.divinex.entity.Post
 import com.asharya.divinex.entity.User
 import com.asharya.divinex.repository.PostRepository
@@ -14,7 +16,8 @@ import java.lang.Exception
 
 class ProfileViewModel(
     private val userRepository: UserRepository,
-    private val postRepository: PostRepository
+    private val postRepository: PostRepository,
+    private val myPreferences: SharedPreferences
 ) : ViewModel() {
 
     private val _user = MutableLiveData<User>()
@@ -52,6 +55,9 @@ class ProfileViewModel(
             try {
                 postRepository.deleteAllPosts()
                 userRepository.deleteAllUser()
+                ServiceBuilder.token = null
+                ServiceBuilder.currentUser = null
+                deleteSharedPref()
                 _isLoggedOut.value = true
             } catch (ex: Exception) {
                 Log.e("ProfileViewModel", ex.toString())
@@ -60,6 +66,12 @@ class ProfileViewModel(
         }
     }
 
+    private fun deleteSharedPref() {
+        val editor = myPreferences.edit()
+        editor.putString("username", "")
+        editor.putString("password", "")
+        editor.apply()
+    }
     override fun onCleared() {
         super.onCleared()
     }

@@ -1,5 +1,6 @@
 package com.asharya.divinex.ui.fragments.profile
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -8,6 +9,7 @@ import android.widget.Button
 import android.widget.PopupMenu
 import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -23,6 +25,7 @@ import com.asharya.divinex.entity.Post
 import com.asharya.divinex.entity.User
 import com.asharya.divinex.repository.PostRepository
 import com.asharya.divinex.repository.UserRepository
+import com.asharya.divinex.ui.login.LoginActivity
 import com.bumptech.glide.Glide
 import de.hdodenhof.circleimageview.CircleImageView
 
@@ -69,8 +72,9 @@ class ProfileFragment : Fragment(), UserPostsAdapter.UserPostClickListener {
         val repository = UserRepository(userDao)
         val postDao = context?.let { DivinexDB.getInstance(it).getPostDAO() }
         val postRepository = postDao?.let { PostRepository(it) }
+        val sharedPref = requireContext().getSharedPreferences("MyPref", AppCompatActivity.MODE_PRIVATE)
         viewModel =
-            ViewModelProvider(this, ProfileViewModelFactory(repository, postRepository!!)).get(
+            ViewModelProvider(this, ProfileViewModelFactory(repository, postRepository!!, sharedPref)).get(
                 ProfileViewModel::class.java
             )
 
@@ -93,6 +97,14 @@ class ProfileFragment : Fragment(), UserPostsAdapter.UserPostClickListener {
         viewModel.posts.observe(viewLifecycleOwner, Observer { posts ->
             adapter?.submitList(posts)
             tvPostNumber.text = posts.size.toString()
+        })
+
+        viewModel.isLoggedOut.observe(viewLifecycleOwner, Observer { isLoggedOut ->
+            if (isLoggedOut) {
+                startActivity(Intent(context, LoginActivity::class.java))
+            } else {
+                Toast.makeText(context, "Could not log out", Toast.LENGTH_SHORT).show()
+            }
         })
 
 
@@ -136,6 +148,6 @@ class ProfileFragment : Fragment(), UserPostsAdapter.UserPostClickListener {
 
 
     private fun logout() {
-        Toast.makeText(context, "Logout hunxa aba", Toast.LENGTH_SHORT).show()
+        viewModel.logout()
     }
 }
