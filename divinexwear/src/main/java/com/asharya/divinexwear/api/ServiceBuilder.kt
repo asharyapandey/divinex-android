@@ -1,6 +1,6 @@
 package com.asharya.divinex.api
 
-import com.asharya.divinex.model.User
+import com.asharya.divinexwear.model.User
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
