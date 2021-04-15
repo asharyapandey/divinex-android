@@ -68,6 +68,7 @@ class CommentFragment : Fragment(), CommentAdapter.OnCommentClick {
         viewModel.commentUpdated.observe(viewLifecycleOwner, Observer { isCommentUpdated ->
             if (isCommentUpdated) {
                 reset()
+                refreshComments()
                 Toast.makeText(context, "Comment Updated", Toast.LENGTH_SHORT).show()
             }
         })
@@ -94,7 +95,6 @@ class CommentFragment : Fragment(), CommentAdapter.OnCommentClick {
     private fun updateComment(comment: Comment) {
         if (currentComment._id != "") {
             viewModel.updateComment(currentComment._id, comment)
-            refreshComments()
         } else {
             Toast.makeText(context, "Select a Comment", Toast.LENGTH_SHORT).show()
         }
@@ -153,6 +153,6 @@ class CommentFragment : Fragment(), CommentAdapter.OnCommentClick {
     }
 
     private fun refreshComments() {
-        viewModel.getPosts(args.postID)
+        viewModel.getComments(args.postID)
     }
 }

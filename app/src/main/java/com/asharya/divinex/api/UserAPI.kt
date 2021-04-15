@@ -1,10 +1,7 @@
 package com.asharya.divinex.api
 
 import com.asharya.divinex.model.User
-import com.asharya.divinex.response.LoginResponse
-import com.asharya.divinex.response.SearchResponse
-import com.asharya.divinex.response.UpdateDeletePostResponse
-import com.asharya.divinex.response.UserResponse
+import com.asharya.divinex.response.*
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import retrofit2.Response
@@ -73,4 +70,9 @@ interface UserAPI {
         @Field("email") email: String,
         @Field("gender") gender: String
     ): Response<UserResponse>
+
+    @GET("user/notification")
+    suspend fun getNotifications(
+        @Header("auth-token") token: String,
+    ): Response<NotificationResponse>
 }

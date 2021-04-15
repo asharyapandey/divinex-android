@@ -131,4 +131,7 @@ class UserRepository(private val userDAO: UserDAO) : ApiRequest() {
         }
     }
 
+    suspend fun deleteAllUser() {
+        userDAO.deleteAllUser()
+    }
 }

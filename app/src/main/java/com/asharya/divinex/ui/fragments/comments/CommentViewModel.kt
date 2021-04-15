@@ -24,11 +24,8 @@ class CommentViewModel(private val repository: CommentRepository) : ViewModel() 
     val commentUpdated: LiveData<Boolean>
         get() = _commentUpdated
 
-    init {
 
-    }
-
-    fun getPosts(id: String) {
+    fun getComments(id: String) {
         viewModelScope.launch {
             _comments.value = repository.getComments(id)
         }
