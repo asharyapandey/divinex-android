@@ -1,9 +1,12 @@
 package com.asharya.divinexwear
 
+import android.content.Intent
 import android.os.Bundle
 import android.support.wearable.activity.WearableActivity
 import android.widget.Button
 import android.widget.Toast
+import com.asharya.divinex.api.ServiceBuilder
+import com.asharya.divinexwear.repo.UserRepository
 import com.google.android.material.textfield.TextInputEditText
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -31,16 +34,26 @@ class LoginActivity : WearableActivity() {
             val username = etUsername.text.toString().trim()
             val password= etPassword.text.toString().trim()
 
-            Toast.makeText(this, "$username, $password", Toast.LENGTH_SHORT).show()
+            login(username, password)
+
         }
     }
 
-    fun Login(username: String, password: String) {
+    fun login(username: String, password: String) {
         CoroutineScope(Dispatchers.IO).launch {
             try {
+                val repository = UserRepository()
+                val response = repository.loginUser(username, password)
+                if (response.success == true) {
+                    ServiceBuilder.token = response.token
+                    ServiceBuilder.currentUser = response.user
+                    startActivity(Intent(this@LoginActivity, DashboardActivity::class.java))
 
-                val response =
+                    withContext(Dispatchers.Main) {
+                        Toast.makeText(this@LoginActivity, "Logged In", Toast.LENGTH_SHORT).show()
+                    }
 
+                }
             } catch (ex: Exception) {
                 withContext(Dispatchers.Main) {
                     Toast.makeText(this@LoginActivity, ex.toString(), Toast.LENGTH_SHORT).show()
