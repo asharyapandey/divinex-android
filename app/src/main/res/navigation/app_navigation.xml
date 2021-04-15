@@ -17,12 +17,24 @@
         tools:layout="@layout/fragment_profile" >
         <action
             android:id="@+id/action_profileFragment_to_mapsFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"
             app:destination="@id/mapsFragment" />
         <action
             android:id="@+id/action_profileFragment_to_userPostsFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"
             app:destination="@id/userPostsFragment" />
         <action
             android:id="@+id/action_profileFragment_to_editProfileFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"
             app:destination="@id/editProfileFragment" />
     </fragment>
     <fragment
@@ -36,12 +48,22 @@
             app:enterAnim="@anim/slide_in_bottom"
             app:exitAnim="@anim/slide_out_top"
             app:popEnterAnim="@anim/slide_in_top"
-            app:popExitAnim="@anim/slide_out_bottom" />
+            app:popExitAnim="@anim/slide_out_bottom"
+            />
         <action
             android:id="@+id/action_homeFragment_to_viewProfileFragment"
-            app:destination="@id/viewProfileFragment" />
+            app:destination="@id/viewProfileFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"
+            />
         <action
             android:id="@+id/action_homeFragment_to_addPostFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"
             app:destination="@id/addPostFragment" />
     </fragment>
     <fragment
@@ -56,6 +78,10 @@
         tools:layout="@layout/fragment_search" >
         <action
             android:id="@+id/action_searchFragment_to_viewProfileFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"
             app:destination="@id/viewProfileFragment" />
     </fragment>
     <fragment
@@ -74,6 +100,10 @@
             android:defaultValue='""' />
         <action
             android:id="@+id/action_viewProfileFragment_to_userPostsFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"
             app:destination="@id/userPostsFragment" />
     </fragment>
     <fragment
@@ -91,9 +121,17 @@
             android:defaultValue="1" />
         <action
             android:id="@+id/action_userPostsFragment_to_editPostFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"
             app:destination="@id/editPostFragment" />
         <action
             android:id="@+id/action_userPostsFragment_to_commentFragment"
+            app:enterAnim="@anim/slide_in_bottom"
+            app:exitAnim="@anim/slide_out_top"
+            app:popEnterAnim="@anim/slide_in_top"
+            app:popExitAnim="@anim/slide_out_bottom"
             app:destination="@id/commentFragment" />
     </fragment>
     <fragment
@@ -125,6 +163,10 @@
             app:argType="com.asharya.divinex.entity.User" />
         <action
             android:id="@+id/action_editProfileFragment_to_profileFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"
             app:destination="@id/profileFragment" />
     </fragment>
 </navigation>
