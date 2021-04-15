@@ -52,11 +52,14 @@ class LoginActivity : WearableActivity() {
                     withContext(Dispatchers.Main) {
                         Toast.makeText(this@LoginActivity, "Logged In", Toast.LENGTH_SHORT).show()
                     }
-
+                } else {
+                    withContext(Dispatchers.Main) {
+                        Toast.makeText(this@LoginActivity, "Invalid Credentials", Toast.LENGTH_SHORT).show()
+                    }
                 }
             } catch (ex: Exception) {
                 withContext(Dispatchers.Main) {
-                    Toast.makeText(this@LoginActivity, ex.toString(), Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this@LoginActivity, "Invalid Credentials", Toast.LENGTH_SHORT).show()
                 }
             }
         }
