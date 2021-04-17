@@ -32,6 +32,7 @@ class HomeFragment : Fragment(), NewsFeedAdapter.PostClickListener, SensorEventL
     private lateinit var adapter: NewsFeedAdapter
     private lateinit var sensorManager: SensorManager
     private var sensor: Sensor? = null
+    private var gyroSensor: Sensor? = null
     private val SHAKE_THRESHOLD_GRAVITY = 2.7f
     private val SHAKE_SLOP_TIME_MS = 500
     private val SHAKE_COUNT_RESET_TIME_MS = 3000
@@ -54,7 +55,10 @@ class HomeFragment : Fragment(), NewsFeedAdapter.PostClickListener, SensorEventL
 
         val postDao = context?.let { DivinexDB.getInstance(it).getPostDAO() }
         val repository = postDao?.let { PostRepository(it) }
-        viewModel = ViewModelProvider(this, HomeViewModelFactory(repository!!)).get(HomeViewModel::class.java)
+        viewModel = ViewModelProvider(
+            this,
+            HomeViewModelFactory(repository!!)
+        ).get(HomeViewModel::class.java)
         rvFeedPosts = view.findViewById(R.id.rvFeedPosts)
 
         adapter = context?.let { NewsFeedAdapter(it, this) }!!
@@ -69,7 +73,9 @@ class HomeFragment : Fragment(), NewsFeedAdapter.PostClickListener, SensorEventL
 
         if (checkSensor()) {
             sensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)
+            gyroSensor= sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE)
             sensorManager.registerListener(this, sensor, SensorManager.SENSOR_DELAY_NORMAL)
+            sensorManager.registerListener(gyroListener, gyroSensor, SensorManager.SENSOR_DELAY_NORMAL)
         }
         return view
     }
@@ -79,14 +85,28 @@ class HomeFragment : Fragment(), NewsFeedAdapter.PostClickListener, SensorEventL
         popupMenu.menuInflater.inflate(R.menu.update_delete, popupMenu.menu)
         popupMenu.setOnMenuItemClickListener { item ->
             when (item.itemId) {
-                R.id.menuDelete-> delete()
-                R.id.menuUpdate-> update()
+                R.id.menuDelete -> delete()
+                R.id.menuUpdate -> update()
             }
             true
         }
         popupMenu.show()
     }
 
+    val gyroListener = object : SensorEventListener {
+        override fun onSensorChanged(event: SensorEvent?) {
+            val value = event!!.values[1]
+            if (value < 0) {
+                rvFeedPosts.smoothScrollToPosition(0)
+            }
+            else if (value < 0)
+                Toast.makeText(requireContext(), "Right", Toast.LENGTH_SHORT).show()
+        }
+
+        override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {
+        }
+
+    }
     override fun onViewCommentsClick(postID: String) {
         val action = HomeFragmentDirections.actionHomeFragmentToCommentFragment(postID)
         findNavController().navigate(action)
@@ -104,7 +124,11 @@ class HomeFragment : Fragment(), NewsFeedAdapter.PostClickListener, SensorEventL
     private fun delete() {
         TODO("Not yet implemented")
     }
-    private fun checkSensor() = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER) != null
+
+    private fun checkSensor() =
+        sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER) != null && sensorManager.getDefaultSensor(
+            Sensor.TYPE_GYROSCOPE
+        ) != null
 
     private fun refreshPost() {
         viewModel.getPosts()

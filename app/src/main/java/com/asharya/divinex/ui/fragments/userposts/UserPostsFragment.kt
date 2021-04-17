@@ -1,5 +1,9 @@
 package com.asharya.divinex.ui.fragments.userposts
 
+import android.hardware.Sensor
+import android.hardware.SensorEvent
+import android.hardware.SensorEventListener
+import android.hardware.SensorManager
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -23,6 +27,8 @@ class UserPostsFragment : Fragment(), NewsFeedAdapter.PostClickListener {
     private lateinit var rvFeedPosts: RecyclerView
     private lateinit var viewModel: UserPostsViewModel
     private lateinit var adapter: NewsFeedAdapter
+
+    private lateinit var sensorManager: SensorManager
 
     private val args by navArgs<UserPostsFragmentArgs>()
 
