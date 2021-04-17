@@ -1,2 +1,3 @@
+include ':divinexwear'
 include ':app'
 rootProject.name = "DivineX"

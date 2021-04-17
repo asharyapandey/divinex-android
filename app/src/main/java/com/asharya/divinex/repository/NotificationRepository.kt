@@ -44,7 +44,6 @@ class NotificationRepository(private val notificationDAO: NotificationDAO) : Api
                     )
                 }
             }
-
         } catch (ex: Exception) {
             Log.e("CommentRepo", ex.toString())
         }

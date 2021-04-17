@@ -61,6 +61,7 @@ class CommentFragment : Fragment(), CommentAdapter.OnCommentClick {
         viewModel.commentAdded.observe(viewLifecycleOwner, Observer { commentAdded ->
             if (commentAdded) {
                 reset()
+                refreshComments()
                 Toast.makeText(context, "Comment Added", Toast.LENGTH_SHORT).show()
             }
         })
@@ -73,6 +74,12 @@ class CommentFragment : Fragment(), CommentAdapter.OnCommentClick {
             }
         })
 
+        viewModel.commentDeleted.observe(viewLifecycleOwner, Observer { isCommentDeleted ->
+            if (isCommentDeleted) {
+                reset()
+                refreshComments()
+            }
+        })
 
         btnComment.setOnClickListener {
             if (TextUtils.isEmpty(etComment.text)) {

@@ -1,32 +1,31 @@
 package com.asharya.divinex.ui.splash
 
-import android.content.Intent
 import android.content.SharedPreferences
 import android.util.Log
-import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.asharya.divinex.api.ServiceBuilder
-import com.asharya.divinex.entity.Post
-import com.asharya.divinex.entity.User
-import com.asharya.divinex.repository.PostRepository
+import com.asharya.divinex.model.User
 import com.asharya.divinex.repository.UserRepository
-import com.asharya.divinex.ui.login.LoginActivity
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.lang.Exception
 
 class SplashViewModel(
     private val userRepository: UserRepository,
-    private val myPref : SharedPreferences
+    private val myPref: SharedPreferences
 ) : ViewModel() {
-
 
     private val _isLoggedIn = MutableLiveData<Boolean>()
     val isLoggedIn: LiveData<Boolean>
         get() = _isLoggedIn
+
+    private val _hasSharedPref = MutableLiveData<Boolean>()
+    val hasSharedPref: LiveData<Boolean>
+        get() = _hasSharedPref
+
 
     fun login() {
         viewModelScope.launch {
@@ -43,7 +42,7 @@ class SplashViewModel(
                         ServiceBuilder.token = response.token
                         ServiceBuilder.currentUser = response.user
                         // saving to shared pref
-                        saveSharedPref(username, password)
+                        saveSharedPref(username, password, response.user?._id!!)
                         // updating the ui
                         _isLoggedIn.value = true
                     }
@@ -54,10 +53,24 @@ class SplashViewModel(
             }
         }
     }
-    private fun saveSharedPref(username: String, password: String) {
+
+    fun checkSharedPref() {
+        val username = myPref.getString("username", "")
+        val password = myPref.getString("password", "")
+        val id = myPref.getString("id", "")
+        if (username == "" || password == "" || id == "") {
+        } else {
+            ServiceBuilder.currentUser =
+                User(_id = id, email = "test@test.com", gender = "Male", username = "username")
+            _hasSharedPref.value = true
+        }
+    }
+
+    private fun saveSharedPref(username: String, password: String, id: String) {
         val editor = myPref.edit()
         editor.putString("username", username)
         editor.putString("password", password)
+        editor.putString("id", id)
         editor.apply()
     }
 

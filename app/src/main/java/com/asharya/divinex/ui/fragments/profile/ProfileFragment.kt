@@ -1,6 +1,11 @@
 package com.asharya.divinex.ui.fragments.profile
 
+import android.content.Context.SENSOR_SERVICE
 import android.content.Intent
+import android.hardware.Sensor
+import android.hardware.SensorEvent
+import android.hardware.SensorEventListener
+import android.hardware.SensorManager
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -29,7 +34,7 @@ import com.asharya.divinex.ui.login.LoginActivity
 import com.bumptech.glide.Glide
 import de.hdodenhof.circleimageview.CircleImageView
 
-class ProfileFragment : Fragment(), UserPostsAdapter.UserPostClickListener {
+class ProfileFragment : Fragment(), UserPostsAdapter.UserPostClickListener, SensorEventListener {
     private lateinit var civProfile: CircleImageView
     private lateinit var tvUsername: TextView
     private lateinit var viewModel: ProfileViewModel
@@ -41,6 +46,9 @@ class ProfileFragment : Fragment(), UserPostsAdapter.UserPostClickListener {
     private lateinit var tvPostNumber: TextView
     private lateinit var tvUsernameHeading: TextView
     private var theUser: User? = null
+    private lateinit var sensorManager: SensorManager
+    private var sensor: Sensor? = null
+    private var sensorCounter = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -52,6 +60,8 @@ class ProfileFragment : Fragment(), UserPostsAdapter.UserPostClickListener {
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_profile, container, false)
+
+        sensorManager = requireContext().getSystemService(SENSOR_SERVICE) as SensorManager
 
         civProfile = view.findViewById(R.id.civProfile)
         tvUsername = view.findViewById(R.id.tvUsername)
@@ -135,6 +145,14 @@ class ProfileFragment : Fragment(), UserPostsAdapter.UserPostClickListener {
             }
             popupMenu.show()
         }
+
+
+        // for sensor
+
+        if (checkSensor()) {
+            sensor = sensorManager.getDefaultSensor(Sensor.TYPE_PROXIMITY)
+            sensorManager.registerListener(this, sensor, SensorManager.SENSOR_DELAY_NORMAL)
+        }
         return view
     }
 
@@ -146,8 +164,24 @@ class ProfileFragment : Fragment(), UserPostsAdapter.UserPostClickListener {
         findNavController().navigate(action)
     }
 
+    private fun checkSensor() = sensorManager.getDefaultSensor(Sensor.TYPE_PROXIMITY) != null
 
     private fun logout() {
         viewModel.logout()
+    }
+
+    override fun onSensorChanged(event: SensorEvent?) {
+        val value = event!!.values[0]
+
+        if (value < 4) {
+            sensorCounter++
+        }
+        if (sensorCounter == 2) {
+            sensorCounter = 0
+            logout()
+        }
+    }
+
+    override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {
     }
 }

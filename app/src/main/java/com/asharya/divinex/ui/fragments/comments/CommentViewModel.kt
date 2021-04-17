@@ -24,6 +24,9 @@ class CommentViewModel(private val repository: CommentRepository) : ViewModel() 
     val commentUpdated: LiveData<Boolean>
         get() = _commentUpdated
 
+    private val _commentDeleted= MutableLiveData<Boolean>()
+    val commentDeleted: LiveData<Boolean>
+        get() = _commentDeleted
 
     fun getComments(id: String) {
         viewModelScope.launch {
@@ -63,6 +66,7 @@ class CommentViewModel(private val repository: CommentRepository) : ViewModel() 
     fun deleteComment(comment: Comment) {
         viewModelScope.launch {
             repository.deleteComment(comment)
+            _commentDeleted.value = true
         }
     }
 
