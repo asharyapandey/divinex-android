@@ -70,7 +70,11 @@
         android:id="@+id/addPostFragment"
         android:name="com.asharya.divinex.ui.fragments.addpost.AddPostFragment"
         android:label="fragment_add_post"
-        tools:layout="@layout/fragment_add_post" />
+        tools:layout="@layout/fragment_add_post" >
+        <action
+            android:id="@+id/action_addPostFragment_to_profileFragment"
+            app:destination="@id/profileFragment" />
+    </fragment>
     <fragment
         android:id="@+id/searchFragment"
         android:name="com.asharya.divinex.ui.fragments.search.SearchFragment"
@@ -167,6 +171,9 @@
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
             app:popExitAnim="@anim/slide_out_right"
+            app:destination="@id/profileFragment" />
+        <action
+            android:id="@+id/action_editProfileFragment_to_profileFragment2"
             app:destination="@id/profileFragment" />
     </fragment>
 </navigation>

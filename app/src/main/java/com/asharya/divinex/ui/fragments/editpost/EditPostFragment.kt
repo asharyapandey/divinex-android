@@ -14,11 +14,13 @@ import android.view.ViewGroup
 import android.widget.*
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.asharya.divinex.R
 import com.asharya.divinex.api.ServiceBuilder
 import com.asharya.divinex.db.DivinexDB
 import com.asharya.divinex.repository.PostRepository
+import com.asharya.divinex.ui.fragments.editprofile.EditProfileFragmentDirections
 import com.bumptech.glide.Glide
 import java.io.ByteArrayOutputStream
 import java.io.File
@@ -68,6 +70,8 @@ class EditPostFragment : Fragment() {
         viewModel.postUpdated.observe(viewLifecycleOwner, androidx.lifecycle.Observer{ isPostAdded ->
             if (isPostAdded) {
                 Toast.makeText(context, "Post Updated", Toast.LENGTH_SHORT).show()
+                val action = EditProfileFragmentDirections.actionEditProfileFragmentToProfileFragment()
+                findNavController().navigate(action)
             }
         })
 

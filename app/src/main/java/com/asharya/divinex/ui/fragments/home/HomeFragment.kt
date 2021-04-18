@@ -93,14 +93,12 @@ class HomeFragment : Fragment(), NewsFeedAdapter.PostClickListener, SensorEventL
         popupMenu.show()
     }
 
-    val gyroListener = object : SensorEventListener {
+    private val gyroListener = object : SensorEventListener {
         override fun onSensorChanged(event: SensorEvent?) {
-            val value = event!!.values[1]
-            if (value < 0) {
+            val value = event!!.values[2]
+            if (value > 0.5f) { // anti
                 rvFeedPosts.smoothScrollToPosition(0)
             }
-            else if (value < 0)
-                Toast.makeText(requireContext(), "Right", Toast.LENGTH_SHORT).show()
         }
 
         override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {
