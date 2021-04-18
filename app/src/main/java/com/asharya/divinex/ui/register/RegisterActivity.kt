@@ -52,6 +52,8 @@ class RegisterActivity : AppCompatActivity() {
 
         viewModel.isRegistered.observe(this, Observer { isRegistered ->
             if (isRegistered) {
+                Toast.makeText(this, "User Registered", Toast.LENGTH_SHORT)
+                    .show()
                 toLogin()
             } else {
                 Toast.makeText(this, "Something Went Wrong Please try Again!!", Toast.LENGTH_SHORT)
