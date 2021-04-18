@@ -33,21 +33,8 @@ class DashboardActivity : AppCompatActivity() {
         bnvDashboard = findViewById(R.id.bnvDashboard)
 
         checkRunTimePermission()
-        Toast.makeText(this, "${ServiceBuilder.token}, ${ServiceBuilder.currentUser.toString()}", Toast.LENGTH_SHORT).show()
 
         bnvDashboard.setupWithNavController(navController)
-
-//        bnvDashboard.setOnNavigationItemSelectedListener {
-//            when (it.itemId) {
-//                R.id.miHome -> setFragment(homeFragment)
-//                R.id.miProfile -> setFragment(profileFragment)
-//                R.id.miNotifiation -> setFragment(notificationFragment)
-//                R.id.miSearch -> setFragment(searchFragment)
-//                R.id.miAddPhoto -> setFragment(addPhotoFragment)
-//            }
-//            true
-//        }
-
 
     }
 
